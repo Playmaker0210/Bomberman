@@ -69,8 +69,7 @@ public class BombermanGame extends Application  {
     }
 
     public void createMap() {
-        File url = new File( "C:\\Users\\phant\\Downloads\\bomberman-starter-starter-2\\" +
-                "bomberman-starter-starter-2\\res\\levels\\Level1.txt");
+        File url = new File("C:\\Users\\phant\\Documents\\GitHub\\Bomberman\\res\\levels\\Level1.txt");
         // Đọc dữ liệu từ File với Scanner
         Scanner scanner = null;
         try {
