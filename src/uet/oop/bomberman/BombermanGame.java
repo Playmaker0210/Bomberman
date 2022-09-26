@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.enemy.Enemy1;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
 import uet.oop.bomberman.entities.field.Wall;
@@ -65,6 +66,8 @@ public class BombermanGame extends Application  {
 
         Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
+        Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
+        entities.add(en);
         PlayerController.bomberController(scene, (Bomber) bomberman);
     }
 

@@ -15,16 +15,14 @@ public class Enemy1 extends Enemy {
             if (this.getSpeedX() == 0) {
                 this.y += this.getSpeedY();
                 if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
-                    if (getY() % Sprite.SCALED_SIZE != 0) {
-                        this.y -= this.getSpeedY();
-                    }
+                    int tmp = this.getSpeedX();
+                    this.setSpeedX(-1*tmp);
                 }
             } else {
                 this.x += this.getSpeedX();
                 if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
-                    if (getX() % Sprite.SCALED_SIZE != 0) {
-                        this.x -= this.getSpeedX();
-                    }
+                    int tmp = this.getSpeedX();
+                    this.setSpeedX(-1*tmp);
 //                    this.randomDirection();
                 }
             }
