@@ -35,6 +35,24 @@ public class Bomber extends Entity {
 
     }
 
+    public int getNumBombs() {
+        return numBombs;
+    }
+
+    public void setNumBombs(int numBombs) {
+        this.numBombs= numBombs;
+    }
+
+    public void activeBomb() {
+        for (int i=0;i<bombs.size();i++) {
+            if((Math.abs(bombs.get(i).getX()/Sprite.SCALED_SIZE - x/Sprite.SCALED_SIZE) == 1 ||
+               Math.abs(bombs.get(i).getY()/Sprite.SCALED_SIZE - y/Sprite.SCALED_SIZE) == 1) &&
+               !bombs.get(i).activate) {
+                bombs.get(i).activate=true;
+            }
+        }
+    }
+
     public void goUp() {
         for (int i = 1; i <= this.speed; i++) {
             this.y -= 1;
@@ -45,7 +63,9 @@ public class Bomber extends Entity {
         }
         keepMoving+=this.speed;
         if(keepMoving > 100) {keepMoving = 0;}
-        setImg(Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, keepMoving, 48).getFxImage());
+        setImg(Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
+                Sprite.player_up_2, keepMoving, 48).getFxImage());
+        activeBomb();
     }
 
     public void goDown() {
@@ -57,7 +77,9 @@ public class Bomber extends Entity {
         }
         keepMoving+=this.speed;
         if(keepMoving > 100) {keepMoving = 0;}
-        setImg((Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, keepMoving, 48).getFxImage()));
+        setImg((Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
+                Sprite.player_down_2, keepMoving, 48).getFxImage()));
+        activeBomb();
     }
 
     public void goRight() {
@@ -70,7 +92,9 @@ public class Bomber extends Entity {
         }
         keepMoving+=this.speed;
         if(keepMoving > 100) {keepMoving = 0;}
-        setImg(Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, keepMoving, 48).getFxImage());
+        setImg(Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
+                Sprite.player_right_2, keepMoving, 48).getFxImage());
+        activeBomb();
     }
 
     public void goLeft() {
@@ -83,14 +107,16 @@ public class Bomber extends Entity {
         }
         keepMoving+=this.speed;
         if(keepMoving > 100) {keepMoving = 0;}
-        setImg(Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, keepMoving, 48).getFxImage());
+        setImg(Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
+                Sprite.player_left_2, keepMoving, 48).getFxImage());
+        activeBomb();
     }
 
     public void createBomb() {
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
-        Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb_1.getFxImage());
-        //System.out.println(this.x + " " + this.y);
+        Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
+        System.out.println(bo.activate);
         bombs.add(bo);
         NttGroup.bombList.add(bo);
     }
