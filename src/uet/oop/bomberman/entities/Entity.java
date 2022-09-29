@@ -4,6 +4,7 @@ import javafx.geometry.Rectangle2D;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Wall;
 import uet.oop.bomberman.graphics.Sprite;
@@ -55,7 +56,13 @@ public abstract class Entity {
     }
 
     public Rectangle2D getBoundary() {
-        return new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        if (this instanceof Bomber || this instanceof Enemy)
+        {
+            return new Rectangle2D(x, y, Sprite.SCALED_SIZE-8, Sprite.SCALED_SIZE);
+        }
+        else{
+            return new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        }
     }
 
     public boolean intersect(Entity other) {

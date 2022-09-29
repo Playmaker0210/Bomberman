@@ -15,6 +15,8 @@ public class PlayerController {
                         bomberman.goUp();
                     } else if (event.getCode().toString().equals("DOWN")) {
                         bomberman.goDown();
+                    } else if (event.getCode().toString().equals("SPACE")) {
+                        bomberman.createBomb();
                     }
                 }
         );
