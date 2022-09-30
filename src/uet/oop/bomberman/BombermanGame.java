@@ -66,6 +66,7 @@ public class BombermanGame extends Application  {
 
         Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
+        NttGroup.bombers.add((Bomber) bomberman);
         Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
         entities.add(en);
         PlayerController.bomberController(scene, (Bomber) bomberman);

@@ -119,6 +119,7 @@ public class Bomber extends Entity {
         //System.out.println(bo.activate);
         bombs.add(bo);
         NttGroup.bombList.add(bo);
+        bo.explo(bombs.size()-1);
     }
 
 }

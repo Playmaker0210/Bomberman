@@ -15,6 +15,7 @@ public class NttGroup {
     public static List<Grass> grassList = new ArrayList<>();
     public static List<Enemy> enemyList = new ArrayList<>();
     public static List<Brick> brickList = new ArrayList<>();
+    public static List<Bomber> bombers = new ArrayList<>();
 //    public static Bomber bomber = new Bomber(1, 1, Sprite.player_right.getFxImage());
 
     public static void removeEnemies() {
