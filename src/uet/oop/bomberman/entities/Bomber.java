@@ -45,8 +45,8 @@ public class Bomber extends Entity {
 
     public void activeBomb() {
         for (int i=0;i<bombs.size();i++) {
-            if((Math.abs(bombs.get(i).getX()/Sprite.SCALED_SIZE - x/Sprite.SCALED_SIZE) == 1 ||
-               Math.abs(bombs.get(i).getY()/Sprite.SCALED_SIZE - y/Sprite.SCALED_SIZE) == 1) &&
+            if((Math.abs(bombs.get(i).getX()/Sprite.SCALED_SIZE - x/Sprite.SCALED_SIZE) > 1 ||
+               Math.abs(bombs.get(i).getY()/Sprite.SCALED_SIZE - y/Sprite.SCALED_SIZE) > 1) &&
                !bombs.get(i).activate) {
                 bombs.get(i).activate=true;
             }
@@ -116,7 +116,7 @@ public class Bomber extends Entity {
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
-        System.out.println(bo.activate);
+        //System.out.println(bo.activate);
         bombs.add(bo);
         NttGroup.bombList.add(bo);
     }
