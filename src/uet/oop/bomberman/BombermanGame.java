@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.enemy.Enemy1;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
@@ -25,6 +26,7 @@ public class BombermanGame extends Application  {
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
+    private int vt ;
 
     private GraphicsContext gc;
     private Canvas canvas;
@@ -66,6 +68,7 @@ public class BombermanGame extends Application  {
 
         Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
+        vt= entities.size()-1;
         NttGroup.bombers.add((Bomber) bomberman);
         Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
         entities.add(en);
@@ -120,6 +123,8 @@ public class BombermanGame extends Application  {
     }
 
     public void render() {
+        Bomber tmp = (Bomber) entities.get(vt);
+        tmp.checkBomb();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));

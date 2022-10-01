@@ -13,14 +13,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 import uet.oop.bomberman.graphics.SpriteSheet;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Bomber extends Entity {
 
-    private int numBombs = 1;
+    private int numBombs = 2;
     private int flameLength = 1;
     private int speed = Sprite.SCALED_SIZE / 8;
-    private boolean isAlive = true;
+    public boolean isAlive = true;
     private int keepMoving = 0;
     private GraphicsContext gc;
     public ArrayList<Bomb> bombs = new ArrayList<>();
@@ -112,14 +115,31 @@ public class Bomber extends Entity {
         activeBomb();
     }
 
+    public void checkBomb() {
+        for(int i=0;i<bombs.size();i++) {
+            bombs.get(i).timeStop= LocalDateTime.now();
+            int tmp = (int) Duration.between(bombs.get(i).timePut,bombs.get(i).timeStop).toMillis();
+            if(tmp%10==0)
+            {
+                bombs.get(i).setImg(Sprite.movingSprite(Sprite.bomb,Sprite.bomb_1,
+                        Sprite.bomb_2,tmp/10,76).getFxImage());
+            }
+            if(tmp>=2000) {
+                NttGroup.bombList.remove(i);
+                bombs.remove(i);
+                i--;
+            }
+        }
+    }
+
     public void createBomb() {
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
         //System.out.println(bo.activate);
         bombs.add(bo);
+        bo.timePut= LocalDateTime.now();
         NttGroup.bombList.add(bo);
-        bo.explo(bombs.size()-1);
     }
 
 }

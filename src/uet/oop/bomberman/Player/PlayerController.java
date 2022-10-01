@@ -20,14 +20,16 @@ public class PlayerController {
                             bomberman.createBomb();
                         }
                     }
+                    bomberman.checkBomb();
                 }
         );
         scene.setOnKeyReleased(event -> {
             if(event.getCode().toString().equals("UP")) {
                 bomberman.setImg(Sprite.player_up.getFxImage());
-            } else {
+            } else if (event.getCode().toString().equals("DOWN")) {
                 bomberman.setImg(Sprite.player_down.getFxImage());
             }
+            bomberman.checkBomb();
         });
     }
 }
