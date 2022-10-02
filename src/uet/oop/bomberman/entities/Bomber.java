@@ -24,6 +24,7 @@ public class Bomber extends Entity {
     private int flameLength = 1;
     private int speed = Sprite.SCALED_SIZE / 8;
     public boolean isAlive = true;
+    private int bombRadius = 1;
     private int keepMoving = 0;
     private GraphicsContext gc;
     public ArrayList<Bomb> bombs = new ArrayList<>();
@@ -125,6 +126,7 @@ public class Bomber extends Entity {
                         Sprite.bomb_2,tmp/10,76).getFxImage());
             }
             if(tmp>=2000) {
+                bombs.get(i).explosion(bombRadius);
                 NttGroup.bombList.remove(i);
                 bombs.remove(i);
                 i--;

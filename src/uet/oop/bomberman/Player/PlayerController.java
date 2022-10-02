@@ -20,7 +20,6 @@ public class PlayerController {
                             bomberman.createBomb();
                         }
                     }
-                    bomberman.checkBomb();
                 }
         );
         scene.setOnKeyReleased(event -> {
@@ -29,7 +28,6 @@ public class PlayerController {
             } else if (event.getCode().toString().equals("DOWN")) {
                 bomberman.setImg(Sprite.player_down.getFxImage());
             }
-            bomberman.checkBomb();
         });
     }
 }
