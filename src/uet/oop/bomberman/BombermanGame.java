@@ -129,7 +129,17 @@ public class BombermanGame extends Application  {
 
     public void render() {
         Bomber tmp = (Bomber) entities.get(vt);
-        if(tmp.bombs.size()>0) tmp.checkBomb();
+        if(tmp.bombs.size()>0) {
+            tmp.checkBomb();
+        }
+        if(NttGroup.flames.size()>0) {
+            for (int i=0;i<NttGroup.flames.size();i++) {
+                if(NttGroup.flames.get(i).checkEndFlame()) {
+                    NttGroup.flames.remove(i);
+                    i--;
+                }
+            }
+        }
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         NttGroup.bombList.forEach(g -> g.render(gc));

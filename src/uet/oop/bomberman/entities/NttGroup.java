@@ -32,10 +32,6 @@ public class NttGroup {
         //brickList.removeIf(Brick::isBroken);
     }
 
-    public static void removeBomb() {
-        bombList.removeIf(Bomb::isVisible);
-    }
-
     public static void clearAll() {
         enemyList.clear();
         brickList.clear();

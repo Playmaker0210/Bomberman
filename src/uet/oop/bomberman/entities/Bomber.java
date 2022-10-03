@@ -49,8 +49,11 @@ public class Bomber extends Entity {
 
     public void activeBomb() {
         for (int i=0;i<bombs.size();i++) {
-            if((Math.abs(bombs.get(i).getX()/Sprite.SCALED_SIZE - x/Sprite.SCALED_SIZE) > 1 ||
-               Math.abs(bombs.get(i).getY()/Sprite.SCALED_SIZE - y/Sprite.SCALED_SIZE) > 1) &&
+            double tmpX = (double) bombs.get(i).getX()/Sprite.SCALED_SIZE;
+            double tmpY = (double) bombs.get(i).getY()/Sprite.SCALED_SIZE;
+            double vtX = (double) x/Sprite.SCALED_SIZE;
+            double vtY = (double) y/Sprite.SCALED_SIZE;
+            if((Math.abs(tmpX - vtX) >= 0.9 || Math.abs(tmpY - vtY) >= 0.9) &&
                !bombs.get(i).activate) {
                 bombs.get(i).activate=true;
             }
