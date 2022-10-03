@@ -24,9 +24,8 @@ public class Bomber extends Entity {
     private int flameLength = 1;
     private int speed = Sprite.SCALED_SIZE / 8;
     public boolean isAlive = true;
-    private int bombRadius = 1;
+    private int bombRadius = 2;
     private int keepMoving = 0;
-    private GraphicsContext gc;
     public ArrayList<Bomb> bombs = new ArrayList<>();
 
     public Bomber(int x, int y, Image img) {

@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.bomb.Bomb;
+import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.enemy.Enemy1;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
@@ -71,6 +72,7 @@ public class BombermanGame extends Application  {
         vt= entities.size()-1;
         NttGroup.bombers.add((Bomber) bomberman);
         Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
+        NttGroup.enemyList.add((Enemy) en);
         entities.add(en);
         PlayerController.bomberController(scene, (Bomber) bomberman);
     }
@@ -124,7 +126,7 @@ public class BombermanGame extends Application  {
     }
 
     public void update() {
-        entities.forEach(Entity::update);
+        NttGroup.enemyList.forEach(Enemy::update);
     }
 
     public void render() {

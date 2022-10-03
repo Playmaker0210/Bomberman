@@ -53,7 +53,7 @@ public class Bomb extends Entity {
                     Sprite.explosion_vertical_top_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT) {
+        if(lastPos!=EXIT&&NttGroup.map[indexX][lastPos]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX, lastPos,
                     Sprite.explosion_vertical_top_last1.getFxImage(), timeStartFlame);
@@ -78,7 +78,7 @@ public class Bomb extends Entity {
                     Sprite.explosion_vertical_down_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT) {
+        if(lastPos!=EXIT&&NttGroup.map[indexX][lastPos]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX, lastPos,
                     Sprite.explosion_vertical_down_last1.getFxImage(), timeStartFlame);
@@ -103,7 +103,7 @@ public class Bomb extends Entity {
                     Sprite.explosion_horizontal_left_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT) {
+        if(lastPos!=EXIT&&NttGroup.map[lastPos][indexY]==' ') {
             id++;
             bombFlame[id] = new Flame(lastPos, indexY,
                     Sprite.explosion_horizontal_left_last1.getFxImage(), timeStartFlame);
@@ -129,7 +129,7 @@ public class Bomb extends Entity {
                     Sprite.explosion_horizontal_right_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT) {
+        if(lastPos!=EXIT&&NttGroup.map[lastPos][indexY]==' ') {
             id++;
             bombFlame[id] = new Flame(lastPos, indexY,
                     Sprite.explosion_horizontal_right_last1.getFxImage(), timeStartFlame);
