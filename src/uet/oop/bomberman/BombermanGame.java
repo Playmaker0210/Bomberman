@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.bomb.Bomb;
+import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.enemy.Enemy1;
 import uet.oop.bomberman.entities.field.Brick;
@@ -64,20 +65,10 @@ public class BombermanGame extends Application  {
             }
         };
         timer.start();
-
-        createMap();
-
-        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
-        vt= entities.size()-1;
-        NttGroup.bombers.add((Bomber) bomberman);
-        Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
-        NttGroup.enemyList.add((Enemy) en);
-        entities.add(en);
-        PlayerController.bomberController(scene, (Bomber) bomberman);
+        createMap(scene);
     }
 
-    public void createMap() {
+    public void createMap(Scene scene) {
         File url = new File("res/levels/Level1.txt");
         // Đọc dữ liệu từ File với Scanner
         Scanner scanner = null;
@@ -123,18 +114,28 @@ public class BombermanGame extends Application  {
             }
             //System.out.println(i+ " " + X);
         }
+
+        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
+        entities.add(bomberman);
+        vt= entities.size()-1;
+        NttGroup.bombers.add((Bomber) bomberman);
+        Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
+        NttGroup.enemyList.add((Enemy) en);
+        entities.add(en);
+        PlayerController.bomberController(scene, (Bomber) bomberman);
     }
 
     public void update() {
-        NttGroup.enemyList.forEach(Enemy::update);
-    }
-
-    public void render() {
         Bomber tmp = (Bomber) entities.get(vt);
         if(tmp.bombs.size()>0) {
             tmp.checkBomb();
         }
         if(NttGroup.flames.size()>0) {
+            if(tmp.checkBoundFlame()) {
+                tmp.setX(Sprite.SCALED_SIZE);
+                tmp.setY(Sprite.SCALED_SIZE);
+            }
+            NttGroup.flames.forEach(Flame::update);
             for (int i=0;i<NttGroup.flames.size();i++) {
                 if(NttGroup.flames.get(i).checkEndFlame()) {
                     NttGroup.flames.remove(i);
@@ -142,8 +143,13 @@ public class BombermanGame extends Application  {
                 }
             }
         }
+        NttGroup.enemyList.forEach(Enemy::update);
+    }
+
+    public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
+        NttGroup.grassList.forEach(g -> g.render(gc));
         NttGroup.bombList.forEach(g -> g.render(gc));
         NttGroup.flames.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));

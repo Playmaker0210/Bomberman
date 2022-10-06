@@ -21,7 +21,7 @@ public class NttGroup {
     public static List<Flame> flames = new ArrayList<>();
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    public static char[][] map = new char[WIDTH][HEIGHT];
+    public static char[][] map = new char[100][100];
 //    public static Bomber bomber = new Bomber(1, 1, Sprite.player_right.getFxImage());
 
     public static void removeEnemies() {

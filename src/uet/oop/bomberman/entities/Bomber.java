@@ -20,11 +20,11 @@ import java.util.ArrayList;
 
 public class Bomber extends Entity {
 
-    private int numBombs = 2;
+    private int numBombs = 1;
     private int flameLength = 1;
     private int speed = Sprite.SCALED_SIZE / 8;
     public boolean isAlive = true;
-    private int bombRadius = 2;
+    private int bombRadius = 1;
     private int keepMoving = 0;
     public ArrayList<Bomb> bombs = new ArrayList<>();
 
@@ -140,10 +140,8 @@ public class Bomber extends Entity {
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
-        //System.out.println(bo.activate);
         bombs.add(bo);
         bo.timePut= LocalDateTime.now();
         NttGroup.bombList.add(bo);
     }
-
 }

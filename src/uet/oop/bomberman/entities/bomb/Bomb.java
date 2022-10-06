@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class Bomb extends Entity {
     public boolean activate = false;
     public static final int EXIT = 1000;
-    private int idBomb = NttGroup.bombList.size()+1;
     public LocalDateTime timePut;
     public LocalDateTime timeStop;
     public LocalDateTime timeStartFlame;
@@ -32,6 +31,7 @@ public class Bomb extends Entity {
         int id = 0;
         bombFlame[id] = new Flame(indexX, indexY,
                 Sprite.bomb_exploded1.getFxImage(), timeStartFlame);
+        int centerFlame = NttGroup.flames.size();
         NttGroup.flames.add(bombFlame[id]);
         int lastPos;
         lastPos = EXIT;
@@ -59,6 +59,18 @@ public class Bomb extends Entity {
                     Sprite.explosion_vertical_top_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
+        int check = bombRadius;
+        if(id<check) {
+            int tmp = NttGroup.flames.size();
+            check = id;
+            if (lastPos==EXIT) {
+                NttGroup.flames.get(centerFlame).exploUp = true;
+            }
+            else {
+                NttGroup.flames.get(tmp-1).exploUp = true;
+            }
+        }
+        check += bombRadius;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
             if(NttGroup.map[indexX][indexY+i]==' ') {
@@ -84,6 +96,17 @@ public class Bomb extends Entity {
                     Sprite.explosion_vertical_down_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
+        if(id<check) {
+            int tmp = NttGroup.flames.size();
+            check = id;
+            if (lastPos==EXIT) {
+                NttGroup.flames.get(centerFlame).exploDown = true;
+            }
+            else {
+                NttGroup.flames.get(tmp-1).exploDown = true;
+            }
+        }
+        check += bombRadius;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
             if(NttGroup.map[indexX-i][indexY]==' ') {
@@ -109,6 +132,17 @@ public class Bomb extends Entity {
                     Sprite.explosion_horizontal_left_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
         }
+        if(id<check) {
+            int tmp = NttGroup.flames.size();
+            check = id;
+            if (lastPos==EXIT) {
+                NttGroup.flames.get(centerFlame).exploLeft = true;
+            }
+            else {
+                NttGroup.flames.get(tmp-1).exploLeft = true;
+            }
+        }
+        check += bombRadius;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
             if(NttGroup.map[indexX+i][indexY]==' ') {
@@ -134,6 +168,15 @@ public class Bomb extends Entity {
             bombFlame[id] = new Flame(lastPos, indexY,
                     Sprite.explosion_horizontal_right_last1.getFxImage(), timeStartFlame);
             NttGroup.flames.add(bombFlame[id]);
+        }
+        if(id<check) {
+            int tmp = NttGroup.flames.size();
+            if (lastPos==EXIT) {
+                NttGroup.flames.get(centerFlame).exploRight = true;
+            }
+            else {
+                NttGroup.flames.get(tmp-1).exploRight = true;
+            }
         }
     }
 }
