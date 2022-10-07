@@ -55,7 +55,7 @@ public class Flame extends Entity {
                 }
                 //j--;
             }
-            else if(tmpX==flameX+1&&tmpY==flameY&&exploRight) {
+            if(tmpX==flameX+1&&tmpY==flameY&&exploRight) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
@@ -65,7 +65,7 @@ public class Flame extends Entity {
                 }
                 //j--;
             }
-            else if(tmpX==flameX&&tmpY==flameY-1&&exploUp) {
+            if(tmpX==flameX&&tmpY==flameY-1&&exploUp) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
@@ -75,7 +75,7 @@ public class Flame extends Entity {
                 }
                 //j--;
             }
-            else if(tmpX==flameX&&tmpY==flameY+1&&exploDown) {
+            if(tmpX==flameX&&tmpY==flameY+1&&exploDown) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
@@ -100,7 +100,7 @@ public class Flame extends Entity {
         }
         if (tmp >= 240) {
             for(int i=0;i<crackList.size();i++) {
-                int vt = crackList.get(i).originalPlace;
+                int vt = crackList.get(i).originalPlace-i;
                 int idX = crackList.get(i).getX() / Sprite.SCALED_SIZE;
                 int idY = crackList.get(i).getY() / Sprite.SCALED_SIZE;
                 removeBrick(idX, idY, vt);

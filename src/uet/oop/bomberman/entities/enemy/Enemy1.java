@@ -42,6 +42,9 @@ public class Enemy1 extends Enemy {
                         , Sprite.minvo_left3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
             }
         }
+        if (this.checkBoundFlame()) {
+
+        }
     }
 }
 
