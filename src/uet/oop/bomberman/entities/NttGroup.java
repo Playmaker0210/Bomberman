@@ -24,17 +24,4 @@ public class NttGroup {
     public static char[][] map = new char[100][100];
 //    public static Bomber bomber = new Bomber(1, 1, Sprite.player_right.getFxImage());
 
-    public static void removeEnemies() {
-        enemyList.removeIf(enemy -> !enemy.isAlive());
-    }
-
-    public static void removeBrick() {
-        //brickList.removeIf(Brick::isBroken);
-    }
-
-    public static void clearAll() {
-        enemyList.clear();
-        brickList.clear();
-        grassList.clear();
-    }
 }
