@@ -22,30 +22,29 @@ public class Enemy1 extends Enemy {
                 if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
                     int tmp = this.getSpeedX();
                     this.setSpeedX(-1*tmp);
-//                    this.randomDirection();
                 }
                 this.x += this.getSpeedX();
             }
         }
         if (isAlive()) {
             if (this.getSpeedX() > 0) {
-                this.img = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_right2
-                        , Sprite.minvo_right3, this.x, Sprite.DEFAULT_SIZE).getFxImage();
+                this.img = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2
+                        , Sprite.balloom_right3, this.x, Sprite.DEFAULT_SIZE).getFxImage();
             } else if (this.getSpeedX() < 0) {
-                this.img = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_left2
-                        , Sprite.minvo_left3, this.x, Sprite.DEFAULT_SIZE).getFxImage();
+                this.img = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2
+                        , Sprite.balloom_left3, this.x, Sprite.DEFAULT_SIZE).getFxImage();
             } else if (this.getSpeedY() > 0) {
-                this.img = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_right2
-                        , Sprite.minvo_right3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
+                this.img = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2
+                        , Sprite.balloom_right3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
             } else {
-                this.img = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_left2
-                        , Sprite.minvo_left3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
+                this.img = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2
+                        , Sprite.balloom_left3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
             }
         }
     }
 
     public void setSpecificDead() {
-        setImg(Sprite.minvo_dead.getFxImage());
+        setImg(Sprite.balloom_dead.getFxImage());
     }
 }
 

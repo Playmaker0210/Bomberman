@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.time.Duration;
@@ -59,15 +60,49 @@ public abstract class Enemy extends Entity {
     }
 
     public void generateRandomDirection() {
+        int currentDirection = 5;
+        if (speedY > 0) {
+            currentDirection = DOWN;
+        }
+        if (speedY < 0) {
+            currentDirection = UP;
+        }
+        if (speedX > 0) {
+            currentDirection = RIGHT;
+        }
+        if (speedX < 0) {
+            currentDirection = LEFT;
+        }
         Random rand = new Random();
         int direction = rand.nextInt(4);
+        int idX = x/Sprite.SCALED_SIZE;
+        int idY = y/Sprite.SCALED_SIZE;
+        while (true) {
+            if (direction == UP && NttGroup.map[idX][idY-1] == ' '
+                    && direction != currentDirection) {
+                break;
+            }
+            if (direction == DOWN && NttGroup.map[idX][idY+1] == ' '
+                    && direction != currentDirection) {
+                break;
+            }
+            if (direction == LEFT && NttGroup.map[idX-1][idY] == ' '
+                    && direction != currentDirection) {
+                break;
+            }
+            if (direction == RIGHT && NttGroup.map[idX+1][idY] == ' '
+                    && direction != currentDirection) {
+                break;
+            }
+            direction = (direction + 1) % 4;
+        }
         switch (direction) {
             case UP:
-                this.speedY = this.getSpeed();
+                this.speedY = this.getSpeed() * -1;
                 this.speedX = 0;
                 break;
             case DOWN:
-                this.speedY = this.getSpeed() * -1;
+                this.speedY = this.getSpeed();
                 this.speedX = 0;
                 break;
             case LEFT:
@@ -79,6 +114,7 @@ public abstract class Enemy extends Entity {
                 this.speedY = 0;
                 break;
         }
+        //System.out.println(direction+ " "+ currentDirection);
     }
 
     public void setCollisionStart(LocalDateTime tmp) {
@@ -99,8 +135,25 @@ public abstract class Enemy extends Entity {
         return false;
     }
 
-    public void RandomSpeed() {
+    public void randomSpeed() {
         Random rand = new Random();
         this.speed = rand.nextInt(1) + 1;
+    }
+
+    public int countDirection(int idX, int idY) {
+        int cnt = 0;
+        if (NttGroup.map[idX-1][idY] == ' ') {
+            cnt++;
+        }
+        if (NttGroup.map[idX+1][idY] == ' ') {
+            cnt++;
+        }
+        if (NttGroup.map[idX][idY-1] == ' ') {
+            cnt++;
+        }
+        if (NttGroup.map[idX][idY+1] == ' ') {
+            cnt++;
+        }
+        return cnt;
     }
 }

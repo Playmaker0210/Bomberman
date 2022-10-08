@@ -94,9 +94,9 @@ public class Flame extends Entity {
         imgCounter++;
         for (int i=0;i<crackList.size();i++) {
             int vt = crackList.get(i).originalPlace;
-            if(imgCounter==12) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded.getFxImage());
-            if(imgCounter==24) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded1.getFxImage());
-            if(imgCounter==36) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded2.getFxImage());
+            if(imgCounter==9) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded.getFxImage());
+            if(imgCounter==18) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded1.getFxImage());
+            if(imgCounter==27) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded2.getFxImage());
         }
         if (tmp >= 240) {
             for(int i=0;i<crackList.size();i++) {
