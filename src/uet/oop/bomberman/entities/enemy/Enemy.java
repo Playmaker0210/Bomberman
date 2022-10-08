@@ -2,13 +2,20 @@ package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.graphics.Sprite;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Random;
 
 public abstract class Enemy extends Entity {
 
     private int speed = 1;
-    private int speedX = this.speed;
-    private int speedY = 0;
+    private int speedX = 0;
+    private int speedY = this.speed;
+    private int imgCounter = 0;
+    private LocalDateTime collisionStart;
     private boolean isAlive = true;
     public static final int UP = 0;
     public static final int DOWN = 1;
@@ -74,12 +81,26 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    public void setCollisionStart(LocalDateTime tmp) {
+        collisionStart = tmp;
+    }
+
+    public abstract void setSpecificDead();
+    public boolean checkDisappear() {
+        imgCounter++;
+        LocalDateTime timeCheck = LocalDateTime.now();
+        int tmp = (int) Duration.between(collisionStart, timeCheck).toMillis();
+        if (imgCounter == 29) setImg(Sprite.mob_dead1.getFxImage());
+        if (imgCounter == 58) setImg(Sprite.mob_dead2.getFxImage());
+        if (imgCounter == 87) setImg(Sprite.mob_dead3.getFxImage());
+        if (tmp >= 1000) {
+            return true;
+        }
+        return false;
+    }
+
     public void RandomSpeed() {
         Random rand = new Random();
         this.speed = rand.nextInt(1) + 1;
-    }
-
-    public void chaseBomber() {
-
     }
 }

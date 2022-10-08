@@ -7,24 +7,24 @@ public class Enemy1 extends Enemy {
 
     public Enemy1(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
-        this.setSpeed(2);
+        this.setSpeed(1);
     }
     @Override
     public void update() {
         if (isAlive()) {
             if (this.getSpeedX() == 0) {
-                this.y += this.getSpeedY();
                 if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
-                    int tmp = this.getSpeedX();
-                    this.setSpeedX(-1*tmp);
+                    int tmp = this.getSpeedY();
+                    this.setSpeedY(-1*tmp);
                 }
+                this.y += this.getSpeedY();
             } else {
-                this.x += this.getSpeedX();
                 if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
                     int tmp = this.getSpeedX();
                     this.setSpeedX(-1*tmp);
 //                    this.randomDirection();
                 }
+                this.x += this.getSpeedX();
             }
         }
         if (isAlive()) {
@@ -42,9 +42,10 @@ public class Enemy1 extends Enemy {
                         , Sprite.minvo_left3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
             }
         }
-        if (this.checkBoundFlame()) {
+    }
 
-        }
+    public void setSpecificDead() {
+        setImg(Sprite.minvo_dead.getFxImage());
     }
 }
 

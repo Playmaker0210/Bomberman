@@ -19,6 +19,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.Player.PlayerController;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -119,9 +120,8 @@ public class BombermanGame extends Application  {
         entities.add(bomberman);
         vt= entities.size()-1;
         NttGroup.bombers.add((Bomber) bomberman);
-        Entity en = new Enemy1(26, 11, Sprite.minvo_right1.getFxImage());
+        Entity en = new Enemy1(25, 10, Sprite.minvo_right1.getFxImage());
         NttGroup.enemyList.add((Enemy) en);
-        entities.add(en);
         PlayerController.bomberController(scene, (Bomber) bomberman);
     }
 
@@ -129,6 +129,20 @@ public class BombermanGame extends Application  {
         Bomber tmp = (Bomber) entities.get(vt);
         if(tmp.bombs.size()>0) {
             tmp.checkBomb();
+        }
+        for(int i=0;i<NttGroup.enemyList.size();i++) {
+            if(NttGroup.enemyList.get(i).checkBoundFlame()
+                    && NttGroup.enemyList.get(i).isAlive()) {
+                NttGroup.enemyList.get(i).setSpeed(0);
+                NttGroup.enemyList.get(i).setAlive(false);
+                NttGroup.enemyList.get(i).setCollisionStart(LocalDateTime.now());
+                NttGroup.enemyList.get(i).setSpecificDead();
+            }
+            if(!NttGroup.enemyList.get(i).isAlive()
+                    && NttGroup.enemyList.get(i).checkDisappear()) {
+                NttGroup.enemyList.remove(i);
+                i--;
+            }
         }
         if(NttGroup.flames.size()>0) {
             if(tmp.checkBoundFlame()) {
@@ -150,7 +164,7 @@ public class BombermanGame extends Application  {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         NttGroup.grassList.forEach(g -> g.render(gc));
-        //NttGroup.enemyList.forEach(g -> g.render(gc));
+        NttGroup.enemyList.forEach(g -> g.render(gc));
         NttGroup.bombList.forEach(g -> g.render(gc));
         NttGroup.flames.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
