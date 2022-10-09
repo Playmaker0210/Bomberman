@@ -10,7 +10,8 @@ public class Enemy2 extends Enemy{
     }
     @Override
     public void update() {
-        if (isAlive()) {
+        moveCounter = (moveCounter+1)%2;
+        if (isAlive() && moveCounter == 0) {
             if (this.getSpeedX() == 0) {
                 if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
                     int tmp = this.getSpeedY();
@@ -33,7 +34,7 @@ public class Enemy2 extends Enemy{
                 }
             }
         }
-        if (isAlive()) {
+        if (isAlive() && moveCounter == 0) {
             if (this.getSpeedX() > 0) {
                 this.img = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2
                         , Sprite.oneal_right3, this.x, Sprite.DEFAULT_SIZE).getFxImage();

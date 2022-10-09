@@ -16,8 +16,10 @@ public abstract class Enemy extends Entity {
     private int speedX = 0;
     private int speedY = this.speed;
     private int imgCounter = 0;
+
     private LocalDateTime collisionStart;
     private boolean isAlive = true;
+    protected int moveCounter = 0;
     public static final int UP = 0;
     public static final int DOWN = 1;
     public static final int LEFT = 2;
@@ -79,19 +81,19 @@ public abstract class Enemy extends Entity {
         int idY = y/Sprite.SCALED_SIZE;
         while (true) {
             if (direction == UP && NttGroup.map[idX][idY-1] == ' '
-                    && direction != currentDirection) {
+                    && currentDirection != DOWN) {
                 break;
             }
             if (direction == DOWN && NttGroup.map[idX][idY+1] == ' '
-                    && direction != currentDirection) {
+                    && currentDirection != UP) {
                 break;
             }
             if (direction == LEFT && NttGroup.map[idX-1][idY] == ' '
-                    && direction != currentDirection) {
+                    && currentDirection != RIGHT) {
                 break;
             }
             if (direction == RIGHT && NttGroup.map[idX+1][idY] == ' '
-                    && direction != currentDirection) {
+                    && currentDirection != LEFT) {
                 break;
             }
             direction = (direction + 1) % 4;
@@ -137,7 +139,7 @@ public abstract class Enemy extends Entity {
 
     public void randomSpeed() {
         Random rand = new Random();
-        this.speed = rand.nextInt(1) + 1;
+        this.speed = rand.nextInt(2) + 1;
     }
 
     public int countDirection(int idX, int idY) {
