@@ -2,39 +2,77 @@ package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.NttGroup;
+import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Enemy3 extends Enemy{
     private boolean chaseMode;
-    private int countUpDown;
-    private int countLeftRight;
+    private boolean bombEscape;
 
-    // If trên + dưới != ' ' y -> x
-    // If trái + phải != ' ' x -> y
     public Enemy3(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
         this.setSpeed(1);
         this.moveCounter = 0;
         chaseMode = false;
+        bombEscape = false;
     }
     @Override
     public void update() {
         moveCounter = (moveCounter+1)%2;
-        checkChase();
+        if(!chaseMode) {
+            checkChase();
+        }
+        if (checkBoundBomb() && !bombEscape && moveCounter==0) {
+            chaseMode = false;
+            for(Bomb tmp : NttGroup.bombList) {
+                int bombX = tmp.getX()/Sprite.SCALED_SIZE;
+                int bombY = tmp.getY()/Sprite.SCALED_SIZE;
+                int idX = this.x/Sprite.SCALED_SIZE;
+                int idY = this.y/Sprite.SCALED_SIZE;
+                if (Math.abs(bombY - idY)<=1 || Math.abs(bombX - idX)<=1) {
+                    System.out.println(this.getSpeedX()+ " "+this.getSpeedY() + " current");
+                    if (this.getSpeedX()>0) {
+                        this.setSpeedX(-1*this.getSpeedX());
+                        this.setSpeedY(0);
+                    }
+                    if (this.getSpeedX()<0) {
+                        this.setSpeedX(-1*this.getSpeedX());
+                        this.setSpeedY(0);
+                    }
+                    if (this.getSpeedY()<0) {
+                        this.setSpeedY(-1*this.getSpeedY());
+                        this.setSpeedX(0);
+                    }
+                    if (this.getSpeedY()>0) {
+                        this.setSpeedY(-1*this.getSpeedY());
+                        this.setSpeedX(0);
+                    }
+                    System.out.println(this.getSpeedX()+ " "+this.getSpeedY());
+                }
+            }
+            if(this.getSpeedX()!=0) {
+                this.x += this.getSpeedX();
+            }
+            else {
+                this.y += this.getSpeedY();
+            }
+            bombEscape = true;
+        }
         if (chaseMode) makeChase();
         checkDirection();
         if (isAlive() && moveCounter == 0) {
-            //System.out.println(countUpDown+ " " + countLeftRight);
             if (this.getSpeedX() == 0) {
-                if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
+                if (checkBoundWall() || checkBoundBrick()) {
                     int tmp = this.getSpeedY();
                     this.setSpeedY(-1*tmp);
+                    bombEscape = false;
                 }
                 this.y += this.getSpeedY();
             } else {
-                if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
+                if (checkBoundBrick() || checkBoundWall()) {
                     int tmp = this.getSpeedX();
                     this.setSpeedX(-1*tmp);
+                    bombEscape = false;
                 }
                 this.x += this.getSpeedX();
             }
@@ -54,7 +92,7 @@ public class Enemy3 extends Enemy{
                         , Sprite.doll_left3, this.y, Sprite.DEFAULT_SIZE).getFxImage();
             }
         }
-        System.out.println(this.getSpeedX() + " " + this.getSpeedY());
+        //System.out.println(this.getSpeedX() + " " + this.getSpeedY());
     }
     public void setSpecificDead() {
         setImg(Sprite.doll_dead.getFxImage());
@@ -71,8 +109,10 @@ public class Enemy3 extends Enemy{
         int playerY = NttGroup.bombers.getY()/Sprite.SCALED_SIZE;
         if ((idX==playerX && Math.abs(idY-playerY)<=3)
         || (idY==playerY && Math.abs(idX-playerX)<=3)) {
-            this.setSpeed(2);
             chaseMode = true;
+        }
+        else {
+            chaseMode = false;
         }
     }
 
@@ -112,7 +152,6 @@ public class Enemy3 extends Enemy{
                 this.y = tmpY * Sprite.SCALED_SIZE;
             }
             chaseMode = false;
-            this.setSpeed(1);
         }
     }
 

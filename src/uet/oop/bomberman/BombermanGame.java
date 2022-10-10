@@ -122,7 +122,7 @@ public class BombermanGame extends Application  {
         entities.add(bomberman);
         vt= entities.size()-1;
         NttGroup.bombers = (Bomber) bomberman;
-        Entity en = new Enemy3(25, 10, Sprite.doll_right1.getFxImage());
+        Entity en = new Enemy3(25, 5, Sprite.doll_right1.getFxImage());
         NttGroup.enemyList.add((Enemy) en);
         PlayerController.bomberController(scene, NttGroup.bombers);
     }

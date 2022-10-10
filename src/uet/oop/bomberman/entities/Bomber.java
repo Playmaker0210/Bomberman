@@ -130,6 +130,9 @@ public class Bomber extends Entity {
             if(tmp>=2000) {
                 bombs.get(i).explosion(bombRadius);
                 NttGroup.bombList.remove(i);
+                int idX = bombs.get(i).getX()/Sprite.SCALED_SIZE;
+                int idY = bombs.get(i).getY()/Sprite.SCALED_SIZE;
+                NttGroup.map[idX][idY] = ' ';
                 bombs.remove(i);
                 i--;
             }
@@ -140,6 +143,7 @@ public class Bomber extends Entity {
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
+        NttGroup.map[tmpX][tmpY] = 'b';
         bombs.add(bo);
         bo.timePut= LocalDateTime.now();
         NttGroup.bombList.add(bo);

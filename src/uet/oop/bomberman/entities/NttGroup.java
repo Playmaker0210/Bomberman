@@ -7,6 +7,8 @@ import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
 import uet.oop.bomberman.entities.field.Wall;
 import uet.oop.bomberman.entities.enemy.Enemy;
+import uet.oop.bomberman.graphics.Sprite;
+
 import java.util.ArrayList;
 import java.util.List;
 
