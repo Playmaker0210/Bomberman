@@ -16,46 +16,27 @@ public class Enemy3 extends Enemy{
         this.setSpeed(1);
         this.moveCounter = 0;
         chaseMode = false;
-        countUpDown = 0;
-        countLeftRight = 0;
     }
     @Override
     public void update() {
         moveCounter = (moveCounter+1)%2;
         checkChase();
         if (chaseMode) makeChase();
+        checkDirection();
         if (isAlive() && moveCounter == 0) {
             //System.out.println(countUpDown+ " " + countLeftRight);
             if (this.getSpeedX() == 0) {
-                countLeftRight = 0;
                 if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
                     int tmp = this.getSpeedY();
                     this.setSpeedY(-1*tmp);
-                    countUpDown++;
                 }
-                if (countUpDown == 2) {
-                    this.setSpeedX(this.getSpeed());
-                    this.setSpeedY(0);
-                }
-                else {
-                    countUpDown = 0;
-                    this.y += this.getSpeedY();
-                }
+                this.y += this.getSpeedY();
             } else {
-                countUpDown = 0;
                 if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
                     int tmp = this.getSpeedX();
                     this.setSpeedX(-1*tmp);
-                    countLeftRight++;
                 }
-                if (countLeftRight == 2) {
-                    this.setSpeedY(this.getSpeed());
-                    this.setSpeedX(0);
-                }
-                else {
-                    countLeftRight = 0;
-                    this.x += this.getSpeedX();
-                }
+                this.x += this.getSpeedX();
             }
         }
         if (isAlive() && moveCounter == 0) {
@@ -96,6 +77,9 @@ public class Enemy3 extends Enemy{
     }
 
     public void makeChase() {
+        if (this.x%Sprite.SCALED_SIZE!=0 || this.y%Sprite.SCALED_SIZE!=0) {
+            return;
+        }
         int idX = this.x/Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
         int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
@@ -104,45 +88,46 @@ public class Enemy3 extends Enemy{
             this.setSpeedX(0);
             int tmp = this.getSpeed();
             if (idY > playerY) {
-                if(this.getSpeedY()<0) {
-                    this.setSpeedY(-1*tmp);
-                }
-                else {
-                    this.setSpeedY(tmp);
-                }
+                this.setSpeedY(-1*tmp);
             }
             else {
-                if(this.getSpeedY()>0) {
-                    this.setSpeedY(-1*tmp);
-                }
-                else {
-                    this.setSpeedY(tmp);
-                }
+                this.setSpeedY(tmp);
             }
         }
         else if (idY == playerY) {
             this.setSpeedY(0);
             int tmp = this.getSpeed();
             if (idX > playerX) {
-                if(this.getSpeedX()<0) {
-                    this.setSpeedX(-1*tmp);
-                }
-                else {
-                    this.setSpeedX(tmp);
-                }
+                this.setSpeedX(-1*tmp);
             }
             else {
-                if(this.getSpeedX()>0) {
-                    this.setSpeedX(-1*tmp);
-                }
-                else {
-                    this.setSpeedX(tmp);
-                }
+                this.setSpeedX(tmp);
             }
         }
         else {
+            if (this.x%Sprite.SCALED_SIZE!=0||this.y%Sprite.SCALED_SIZE!=0) {
+                int tmpX = this.x/Sprite.SCALED_SIZE;
+                int tmpY = this.y/Sprite.SCALED_SIZE;
+                this.x = tmpX * Sprite.SCALED_SIZE;
+                this.y = tmpY * Sprite.SCALED_SIZE;
+            }
             chaseMode = false;
             this.setSpeed(1);
+        }
+    }
+
+    public void checkDirection() {
+        int idX = this.x/Sprite.SCALED_SIZE;
+        int idY = this.y/Sprite.SCALED_SIZE;
+        if (NttGroup.map[idX][idY-1]!= ' ' && NttGroup.map[idX][idY+1]!= ' '
+                && this.getSpeedX()==0) {
+            this.setSpeedY(0);
+            this.setSpeedX(this.getSpeed());
+        }
+        if (NttGroup.map[idX-1][idY]!= ' ' && NttGroup.map[idX+1][idY]!= ' '
+                && this.getSpeedY()==0) {
+            this.setSpeedX(0);
+            this.setSpeedY(this.getSpeed());
         }
     }
 }
