@@ -46,6 +46,14 @@ public class Bomber extends Entity {
         this.numBombs= numBombs;
     }
 
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
     public void activeBomb() {
         for (int i=0;i<bombs.size();i++) {
             double tmpX = (double) bombs.get(i).getX()/Sprite.SCALED_SIZE;
