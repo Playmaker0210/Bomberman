@@ -85,11 +85,12 @@ public class BombermanGame extends Application  {
             String X= scanner.next();
             X += scanner.nextLine();
             for (int j = 0; j < cot; j++) {
-                Entity object;
+                Entity object = null;
                 if (j == 0 || j == cot - 1 || i == 0 || i == hang - 1) {
                     object = new Wall(j, i, Sprite.wall.getFxImage());
                     NttGroup.wallList.add((Wall) object);
                     NttGroup.map[j][i] = '#';
+                    NttGroup.origin[j][i] = '#';
                 }
                 else {
                     char k = X.charAt(j);
@@ -97,17 +98,27 @@ public class BombermanGame extends Application  {
                         object = new Brick(j, i, Sprite.brick.getFxImage());
                         NttGroup.brickList.add((Brick) object);
                         NttGroup.map[j][i] = '*';
+                        NttGroup.origin[j][i] = ' ';
                         //System.out.println(j+ " "+i);
                     }
                     else if(k=='#'){
                         object = new Wall(j,i,Sprite.wall.getFxImage());
                         NttGroup.wallList.add((Wall) object);
                         NttGroup.map[j][i] = '#';
+                        NttGroup.origin[j][i] = '#';
                     }
-                    else{
+                    else if(k==' '){
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         NttGroup.grassList.add((Grass) object);
                         NttGroup.map[j][i] = ' ';
+                        NttGroup.origin[j][i] = ' ';
+                    }
+                    else {
+                        //System.out.println(k);
+                        object = new Brick(j, i, Sprite.brick.getFxImage());
+                        NttGroup.brickList.add((Brick) object);
+                        NttGroup.map[j][i] = '*';
+                        NttGroup.origin[j][i] = k;
                     }
                 }
                 stillObjects.add(object);
@@ -129,6 +140,12 @@ public class BombermanGame extends Application  {
         if(tmp.bombs.size()>0) {
             tmp.checkBomb();
         }
+        for (int i = 0; i<NttGroup.itemsList.size();i++) {
+            NttGroup.itemsList.get(i).checkPlayerGet(i);
+        }
+        if (tmp.isFlamePass() || tmp.isBombPass()) {
+            tmp.timeOutItem();
+        }
         for(int i=0;i<NttGroup.enemyList.size();i++) {
             if(NttGroup.enemyList.get(i).checkBoundFlame()
                     && NttGroup.enemyList.get(i).isAlive()) {
@@ -144,7 +161,7 @@ public class BombermanGame extends Application  {
             }
         }
         if(NttGroup.flames.size()>0) {
-            if(tmp.checkBoundFlame()) {
+            if(tmp.checkBoundFlame() && !tmp.isFlamePass()) {
                 tmp.setX(Sprite.SCALED_SIZE);
                 tmp.setY(Sprite.SCALED_SIZE);
             }
@@ -165,6 +182,8 @@ public class BombermanGame extends Application  {
         NttGroup.grassList.forEach(g -> g.render(gc));
         NttGroup.enemyList.forEach(g -> g.render(gc));
         NttGroup.bombList.forEach(g -> g.render(gc));
+        NttGroup.detonatorList.forEach(g -> g.render(gc));
+        NttGroup.itemsList.forEach(g -> g.render(gc));
         NttGroup.flames.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }

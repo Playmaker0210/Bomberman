@@ -128,10 +128,10 @@ public abstract class Enemy extends Entity {
         imgCounter++;
         LocalDateTime timeCheck = LocalDateTime.now();
         int tmp = (int) Duration.between(collisionStart, timeCheck).toMillis();
-        if (imgCounter == 29) setImg(Sprite.mob_dead1.getFxImage());
-        if (imgCounter == 58) setImg(Sprite.mob_dead2.getFxImage());
-        if (imgCounter == 87) setImg(Sprite.mob_dead3.getFxImage());
-        if (tmp >= 1000) {
+        if (imgCounter == 40) setImg(Sprite.mob_dead1.getFxImage());
+        if (imgCounter == 69) setImg(Sprite.mob_dead2.getFxImage());
+        if (imgCounter == 98) setImg(Sprite.mob_dead3.getFxImage());
+        if (tmp >= 1300) {
             return true;
         }
         return false;

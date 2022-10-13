@@ -19,6 +19,14 @@ public class PlayerController {
                         if(bomberman.bombs.size()<bomberman.getNumBombs()) {
                             bomberman.createBomb();
                         }
+                    } else if (event.getCode().toString().equals("D")) {
+                        if (bomberman.getNumDetonator() > 0) {
+                            bomberman.createDetonator();
+                        }
+                    } else if (event.getCode().toString().equals("F")) {
+                        if (bomberman.detonator.size()>0) {
+                            bomberman.detonate();
+                        }
                     }
                 }
         );

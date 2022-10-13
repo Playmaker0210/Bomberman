@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.field.Brick;
+import uet.oop.bomberman.entities.field.Items;
 import uet.oop.bomberman.entities.field.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -59,7 +60,7 @@ public abstract class Entity {
     public Rectangle2D getBoundary() {
         if (this instanceof Bomber || this instanceof Enemy)
         {
-            return new Rectangle2D(x, y, Sprite.SCALED_SIZE-8, Sprite.SCALED_SIZE);
+            return new Rectangle2D(x, y, Sprite.SCALED_SIZE-8, Sprite.SCALED_SIZE-2);
         }
         else{
             return new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
@@ -97,4 +98,5 @@ public abstract class Entity {
         }
         return false;
     }
+
 }

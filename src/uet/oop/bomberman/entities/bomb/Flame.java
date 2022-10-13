@@ -5,6 +5,7 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
+import uet.oop.bomberman.entities.field.Items;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.time.Duration;
@@ -34,9 +35,38 @@ public class Flame extends Entity {
 
     public void removeBrick(int idX, int idY, int vt) {
         NttGroup.brickList.remove(vt);
-        NttGroup.map[idX][idY] = ' ';
-        Grass temp = new Grass(idX, idY, Sprite.grass.getFxImage());
-        NttGroup.grassList.add(temp);
+        NttGroup.map[idX][idY] = NttGroup.origin[idX][idY];
+        switch (NttGroup.origin[idX][idY]) {
+            case ' ':
+                Grass tmp = new Grass(idX, idY, Sprite.grass.getFxImage());
+                NttGroup.grassList.add(tmp);
+                break;
+            case '0':
+                Items item = new Items(idX, idY, Sprite.powerup_bombpass.getFxImage());
+                item.setType(Items.TYPE_BOMBPASS);
+                NttGroup.itemsList.add(item);
+                break;
+            case '1':
+                item = new Items(idX, idY, Sprite.powerup_bombs.getFxImage());
+                item.setType(Items.TYPE_BOMBS);
+                NttGroup.itemsList.add(item);
+                break;
+            case '2':
+                item = new Items(idX, idY, Sprite.powerup_detonator.getFxImage());
+                item.setType(Items.TYPE_DETONATOR);
+                NttGroup.itemsList.add(item);
+                break;
+            case '3':
+                item = new Items(idX, idY, Sprite.powerup_flamepass.getFxImage());
+                item.setType(Items.TYPE_FLAMEPASS);
+                NttGroup.itemsList.add(item);
+                break;
+            case '4':
+                item = new Items(idX, idY, Sprite.powerup_flames.getFxImage());
+                item.setType(Items.TYPE_FLAMES);
+                NttGroup.itemsList.add(item);
+                break;
+        }
     }
 
     public void update() {
