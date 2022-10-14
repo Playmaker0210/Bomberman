@@ -60,7 +60,7 @@ public abstract class Entity {
     public Rectangle2D getBoundary() {
         if (this instanceof Bomber || this instanceof Enemy)
         {
-            return new Rectangle2D(x, y, Sprite.SCALED_SIZE-8, Sprite.SCALED_SIZE-2);
+            return new Rectangle2D(x, y, Sprite.SCALED_SIZE-8, Sprite.SCALED_SIZE-1);
         }
         else{
             return new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
@@ -95,6 +95,13 @@ public abstract class Entity {
     public boolean checkBoundFlame() {
         for(Flame flame : NttGroup.flames) {
             if(this.intersect(flame)) {return true;}
+        }
+        return false;
+    }
+
+    public boolean checkBoundEnemy() {
+        for(Enemy enemy : NttGroup.enemyList) {
+            if(this.intersect(enemy)) {return true;}
         }
         return false;
     }

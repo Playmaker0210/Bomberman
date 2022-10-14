@@ -130,21 +130,20 @@ public class BombermanGame extends Application  {
         entities.add(bomberman);
         vt= entities.size()-1;
         NttGroup.bombers = (Bomber) bomberman;
-        Entity en = new Enemy4(25, 5, Sprite.doll_right1.getFxImage());
+        Entity en = new Enemy2(25, 5, Sprite.doll_right1.getFxImage());
         NttGroup.enemyList.add((Enemy) en);
         PlayerController.bomberController(scene, NttGroup.bombers);
     }
 
     public void update() {
-        Bomber tmp = (Bomber) entities.get(vt);
-        if(tmp.bombs.size()>0) {
-            tmp.checkBomb();
+        if(NttGroup.bombers.bombs.size()>0) {
+            NttGroup.bombers.checkBomb();
         }
         for (int i = 0; i<NttGroup.itemsList.size();i++) {
             NttGroup.itemsList.get(i).checkPlayerGet(i);
         }
-        if (tmp.isFlamePass() || tmp.isBombPass()) {
-            tmp.timeOutItem();
+        if (NttGroup.bombers.isFlamePass() || NttGroup.bombers.isBombPass()) {
+            NttGroup.bombers.timeOutItem();
         }
         for(int i=0;i<NttGroup.enemyList.size();i++) {
             if(NttGroup.enemyList.get(i).checkBoundFlame()
@@ -160,11 +159,14 @@ public class BombermanGame extends Application  {
                 i--;
             }
         }
+        if((NttGroup.bombers.checkBoundFlame() && !NttGroup.bombers.isFlamePass())
+                || NttGroup.bombers.checkBoundEnemy()) {
+            NttGroup.bombers.setDie();
+        }
+        if(!NttGroup.bombers.isAlive) {
+            NttGroup.bombers.reset();
+        }
         if(NttGroup.flames.size()>0) {
-            if(tmp.checkBoundFlame() && !tmp.isFlamePass()) {
-                tmp.setX(Sprite.SCALED_SIZE);
-                tmp.setY(Sprite.SCALED_SIZE);
-            }
             NttGroup.flames.forEach(Flame::update);
             for (int i=0;i<NttGroup.flames.size();i++) {
                 if(NttGroup.flames.get(i).checkEndFlame()) {

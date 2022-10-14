@@ -23,12 +23,13 @@ import java.util.ArrayList;
 public class Bomber extends Entity {
 
     private int numBombs = 1;
-    private int flameLength = 1;
     private boolean bombPass = false;
     private boolean flamePass = false;
     private int speed = Sprite.SCALED_SIZE / 8;
     private LocalDateTime timeGetBombPass;
     private LocalDateTime timeGetFlamePass;
+    private LocalDateTime timeDie;
+    private int imgCounter = 0;
     private int numDetonator = 0;
     public boolean isAlive = true;
     private int bombRadius = 1;
@@ -79,7 +80,7 @@ public class Bomber extends Entity {
             double vtX = (double) x/Sprite.SCALED_SIZE;
             double vtY = (double) y/Sprite.SCALED_SIZE;
             if((Math.abs(tmpX - vtX) >= 0.9 || Math.abs(tmpY - vtY) >= 0.9) &&
-               !bombs.get(i).activate) {
+                    !bombs.get(i).activate) {
                 bombs.get(i).activate=true;
             }
         }
@@ -224,6 +225,28 @@ public class Bomber extends Entity {
             if(Duration.between(timeGetBombPass,checkTime).toSeconds() >= 20) {
                 bombPass = false;
             }
+        }
+    }
+
+    public void setDie() {
+        isAlive = false;
+        timeDie = LocalDateTime.now();
+    }
+
+    public void reset() {
+        LocalDateTime checkTime = LocalDateTime.now();
+        int tmp = (int) Duration.between(timeDie, checkTime).toMillis();
+        imgCounter++;
+        if (imgCounter==10) setImg(Sprite.player_dead1.getFxImage());
+        if (imgCounter==75) setImg(Sprite.player_dead2.getFxImage());
+        if (imgCounter==150) setImg(Sprite.player_dead3.getFxImage());
+        if (imgCounter==200) setImg(Sprite.grass.getFxImage());
+        if(tmp>=1500) {
+            this.x=32;
+            this.y=32;
+            isAlive = true;
+            imgCounter=0;
+            setImg(Sprite.player_down.getFxImage());
         }
     }
 }
