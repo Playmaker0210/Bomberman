@@ -3,10 +3,7 @@ package uet.oop.bomberman.entities;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
-import uet.oop.bomberman.entities.field.Brick;
-import uet.oop.bomberman.entities.field.Grass;
-import uet.oop.bomberman.entities.field.Items;
-import uet.oop.bomberman.entities.field.Wall;
+import uet.oop.bomberman.entities.field.*;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -21,6 +18,7 @@ public class NttGroup {
     public static List<Enemy> enemyList = new ArrayList<>();
     public static List<Brick> brickList = new ArrayList<>();
     public static Bomber bombers ;
+    public static Portal gamePortal;
     public static List<Flame> flames = new ArrayList<>();
     public static List<Items> itemsList = new ArrayList<>();
     public static List<Bomb> detonatorList = new ArrayList<>();
@@ -28,6 +26,25 @@ public class NttGroup {
     public static final int HEIGHT = 13;
     public static char[][] map = new char[100][100];
     public static char[][] origin = new char[100][100];
-//    public static Bomber bomber = new Bomber(1, 1, Sprite.player_right.getFxImage());
+
+    public static void reset() {
+        while (NttGroup.wallList.size()>0) {
+            NttGroup.wallList.remove(0);
+        }
+        for (Items item : NttGroup.itemsList) {
+            NttGroup.wallList.remove(item);
+        }
+        for (Grass grass : NttGroup.grassList) {
+            NttGroup.wallList.remove(grass);
+        }
+        for (Brick brick : NttGroup.brickList) {
+            NttGroup.wallList.remove(brick);
+        }
+        for (Bomb bomb : NttGroup.bombList) {
+            NttGroup.wallList.remove(bomb);
+        }
+        NttGroup.bombers = null;
+        NttGroup.gamePortal = null;
+    }
 
 }

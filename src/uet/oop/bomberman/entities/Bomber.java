@@ -79,7 +79,7 @@ public class Bomber extends Entity {
             double tmpY = (double) bombs.get(i).getY()/Sprite.SCALED_SIZE;
             double vtX = (double) x/Sprite.SCALED_SIZE;
             double vtY = (double) y/Sprite.SCALED_SIZE;
-            if((Math.abs(tmpX - vtX) >= 0.9 || Math.abs(tmpY - vtY) >= 0.9) &&
+            if((Math.abs(tmpX - vtX) >= 0.95 || Math.abs(tmpY - vtY) >= 0.95) &&
                     !bombs.get(i).activate) {
                 bombs.get(i).activate=true;
             }
@@ -106,6 +106,7 @@ public class Bomber extends Entity {
             this.y += 1;
             if ((checkBoundBomb() && !bombPass) || checkBoundBrick() || checkBoundWall()) {
                 this.y -= 1;
+                break;
             }
         }
         keepMoving+=this.speed;

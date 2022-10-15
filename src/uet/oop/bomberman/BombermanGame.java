@@ -28,12 +28,10 @@ public class BombermanGame extends Application  {
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    private int vt ;
+    public static int level;
 
     private GraphicsContext gc;
     private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -61,15 +59,16 @@ public class BombermanGame extends Application  {
             @Override
             public void handle(long l) {
                 render();
-                update();
+                update(scene);
             }
         };
         timer.start();
-        createMap(scene);
+        createMap(scene, "Level1.txt");
     }
 
-    public void createMap(Scene scene) {
-        File url = new File("res/levels/Level1.txt");
+    public static void createMap(Scene scene, String last) {
+        System.out.println(last);
+        File url = new File("res/levels/" + last);
         // Đọc dữ liệu từ File với Scanner
         Scanner scanner = null;
         try {
@@ -77,7 +76,7 @@ public class BombermanGame extends Application  {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        int level = scanner.nextInt();
+        level = scanner.nextInt();
         int hang = scanner.nextInt();
         int cot = scanner.nextInt();
 
@@ -85,7 +84,7 @@ public class BombermanGame extends Application  {
             String X= scanner.next();
             X += scanner.nextLine();
             for (int j = 0; j < cot; j++) {
-                Entity object = null;
+                Entity object;
                 if (j == 0 || j == cot - 1 || i == 0 || i == hang - 1) {
                     object = new Wall(j, i, Sprite.wall.getFxImage());
                     NttGroup.wallList.add((Wall) object);
@@ -121,23 +120,22 @@ public class BombermanGame extends Application  {
                         NttGroup.origin[j][i] = k;
                     }
                 }
-                stillObjects.add(object);
             }
-            //System.out.println(i+ " " + X);
         }
 
         Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
-        vt= entities.size()-1;
         NttGroup.bombers = (Bomber) bomberman;
-        Entity en = new Enemy2(25, 5, Sprite.doll_right1.getFxImage());
-        NttGroup.enemyList.add((Enemy) en);
+        //Entity en = new Enemy2(25, 5, Sprite.doll_right1.getFxImage());
+        //NttGroup.enemyList.add((Enemy) en);
         PlayerController.bomberController(scene, NttGroup.bombers);
     }
 
-    public void update() {
+    public void update(Scene scene) {
         if(NttGroup.bombers.bombs.size()>0) {
             NttGroup.bombers.checkBomb();
+        }
+        if(NttGroup.gamePortal != null) {
+            NttGroup.gamePortal.changeLevel(scene);
         }
         for (int i = 0; i<NttGroup.itemsList.size();i++) {
             NttGroup.itemsList.get(i).checkPlayerGet(i);
@@ -180,13 +178,17 @@ public class BombermanGame extends Application  {
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
         NttGroup.grassList.forEach(g -> g.render(gc));
+        NttGroup.brickList.forEach(g -> g.render(gc));
+        NttGroup.wallList.forEach(g -> g.render(gc));
+        NttGroup.itemsList.forEach(g -> g.render(gc));
         NttGroup.enemyList.forEach(g -> g.render(gc));
         NttGroup.bombList.forEach(g -> g.render(gc));
         NttGroup.detonatorList.forEach(g -> g.render(gc));
-        NttGroup.itemsList.forEach(g -> g.render(gc));
         NttGroup.flames.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
+        if(NttGroup.gamePortal != null) {
+            NttGroup.gamePortal.render(gc);
+        }
+        NttGroup.bombers.render(gc);
     }
 }

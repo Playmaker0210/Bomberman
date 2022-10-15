@@ -6,6 +6,7 @@ import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
 import uet.oop.bomberman.entities.field.Items;
+import uet.oop.bomberman.entities.field.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.time.Duration;
@@ -66,6 +67,9 @@ public class Flame extends Entity {
                 item.setType(Items.TYPE_FLAMES);
                 NttGroup.itemsList.add(item);
                 break;
+            case 'p':
+                Portal portal = new Portal(idX, idY, Sprite.portal.getFxImage());
+                NttGroup.gamePortal = portal;
         }
     }
 
