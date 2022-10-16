@@ -31,17 +31,17 @@ public class NttGroup {
         while (NttGroup.wallList.size()>0) {
             NttGroup.wallList.remove(0);
         }
-        for (Items item : NttGroup.itemsList) {
-            NttGroup.wallList.remove(item);
+        while (NttGroup.itemsList.size()>0) {
+            NttGroup.itemsList.remove(0);
         }
-        for (Grass grass : NttGroup.grassList) {
-            NttGroup.wallList.remove(grass);
+        while (NttGroup.grassList.size()>0) {
+            NttGroup.grassList.remove(0);
         }
-        for (Brick brick : NttGroup.brickList) {
-            NttGroup.wallList.remove(brick);
+        while (NttGroup.bombList.size()>0) {
+            NttGroup.bombList.remove(0);
         }
-        for (Bomb bomb : NttGroup.bombList) {
-            NttGroup.wallList.remove(bomb);
+        while (NttGroup.brickList.size()>0) {
+            NttGroup.brickList.remove(0);
         }
         NttGroup.bombers = null;
         NttGroup.gamePortal = null;

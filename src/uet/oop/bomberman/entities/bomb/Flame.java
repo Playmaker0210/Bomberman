@@ -39,8 +39,6 @@ public class Flame extends Entity {
         NttGroup.map[idX][idY] = NttGroup.origin[idX][idY];
         switch (NttGroup.origin[idX][idY]) {
             case ' ':
-                Grass tmp = new Grass(idX, idY, Sprite.grass.getFxImage());
-                NttGroup.grassList.add(tmp);
                 break;
             case '0':
                 Items item = new Items(idX, idY, Sprite.powerup_bombpass.getFxImage());
@@ -83,6 +81,10 @@ public class Flame extends Entity {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
+                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                            , Sprite.grass.getFxImage());
+                    NttGroup.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -93,6 +95,10 @@ public class Flame extends Entity {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
+                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                            , Sprite.grass.getFxImage());
+                    NttGroup.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -103,6 +109,10 @@ public class Flame extends Entity {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
+                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                            , Sprite.grass.getFxImage());
+                    NttGroup.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -113,6 +123,10 @@ public class Flame extends Entity {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
                     crackList.add(NttGroup.brickList.get(j));
+                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                            , Sprite.grass.getFxImage());
+                    NttGroup.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
