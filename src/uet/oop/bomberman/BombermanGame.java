@@ -67,7 +67,6 @@ public class BombermanGame extends Application  {
     }
 
     public static void createMap(Scene scene, String last) {
-        System.out.println(last);
         File url = new File("res/levels/" + last);
         // Đọc dữ liệu từ File với Scanner
         Scanner scanner = null;
