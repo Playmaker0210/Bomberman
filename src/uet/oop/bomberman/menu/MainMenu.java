@@ -2,6 +2,7 @@ package uet.oop.bomberman.menu;
 
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -11,69 +12,68 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import uet.oop.bomberman.entities.NttGroup;
 
+import static uet.oop.bomberman.BombermanGame.createMap;
+
 public class MainMenu {
-    private static ImageView statusGame;
+    private static ImageView startGame;
     public static Text level, bomb, time;
-    public static int bombNumber = 20, timeNumber = 120;
+    public static boolean running;
+    private static boolean isStart;
+    public static ImageView authorView;
+    public static ImageView startButton;
+    public static Group menuRoot;
 
     public static void createMenu(Group root) {
+        running = true;
+        isStart = false;
+        menuRoot = root;
+
+        Image author = new Image("menu/GameMenu.png");
+        authorView = new ImageView(author);
+        authorView.setX(0);
+        authorView.setY(0);
+        authorView.setScaleX(1);
+        authorView.setScaleY(1);
+        root.getChildren().add(authorView);
+
         level = new Text("Level: 1");
         level.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         level.setFill(Color.WHITE);
         level.setX(416);
         level.setY(20);
-        bomb = new Text("Bombs: 20");
-        bomb.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        bomb.setFill(Color.WHITE);
-        bomb.setX(512);
-        bomb.setY(20);
-        time = new Text("Times: 120");
+        time = new Text("Times: 360");
         time.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         time.setFill(Color.WHITE);
         time.setX(608);
         time.setY(20);
 
-        Image newGame = new Image("images/newGame.png");
-        statusGame = new ImageView(newGame);
-        statusGame.setX(-75);
-        statusGame.setY(-10);
-        statusGame.setScaleX(0.5);
-        statusGame.setScaleY(0.5);
-
-        Pane pane = new Pane();
-        pane.getChildren().addAll(level, bomb, time, statusGame);
-        pane.setMinSize(800, 32);
-        pane.setMaxSize(800, 480);
-        pane.setStyle("-fx-background-color: #353535");
-
-        root.getChildren().add(pane);
-
-        statusGame.setOnMouseClicked(event -> {
-            if (NttGroup.bombers.isAlive) {
-                //running = !running;
-            } else {
-                //new Level1();
-                //running = true;
-            }
-            updateMenu();
-        });
+        Image newGame = new Image("menu/StartGame.png");
+        startGame = new ImageView(newGame);
+        startGame.setX(400);
+        startGame.setY(300);
+        startGame.setScaleX(1);
+        startGame.setScaleY(1);
+        startButton = new ImageView(newGame);
+        root.getChildren().add(startGame);
 
     }
 
-    public static void updateMenu() {
-        bomb.setText("Bombs: " + bombNumber);
-
-        if (NttGroup.bombers.isAlive)
-            if (true) {
-                Image pauseGame = new Image("images/pauseGame.png");
-                statusGame.setImage(pauseGame);
-            } else {
-                Image playGame = new Image("images/playGame.png");
-                statusGame.setImage(playGame);
+    public static void MenuControl(Scene scene) {
+        scene.setOnMouseClicked(event -> {
+            //System.out.println((event.getX() - startGame.getX()) + " " + (event.getY() - startGame.getY()));
+            if (event.getX() - startGame.getX() <= 179 && event.getX() >= startGame.getX()
+                    && event.getY() - startGame.getY() <= 42 && event.getY() >= startGame.getY()) {
+                isStart = true;
             }
-        else {
-            Image newGame = new Image("images/newGame.png");
-            statusGame.setImage(newGame);
+        });
+    }
+
+    public static void updateMenu(Scene scene) {
+        if(isStart) {
+            menuRoot.getChildren().remove(authorView);
+            menuRoot.getChildren().remove(startButton);
+            createMap(scene, "Level1.txt");
+            running = false;
         }
     }
 }

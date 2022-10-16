@@ -6,9 +6,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.entities.field.Brick;
@@ -17,12 +18,14 @@ import uet.oop.bomberman.entities.field.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.Player.PlayerController;
+import uet.oop.bomberman.menu.MainMenu;
+
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
+
+import static uet.oop.bomberman.menu.MainMenu.running;
 
 public class BombermanGame extends Application  {
 
@@ -32,6 +35,7 @@ public class BombermanGame extends Application  {
 
     private GraphicsContext gc;
     private Canvas canvas;
+
 
 
     public static void main(String[] args) {
@@ -46,6 +50,8 @@ public class BombermanGame extends Application  {
 
         // Tao root container
         Group root = new Group();
+
+        MainMenu.createMenu(root);
         root.getChildren().add(canvas);
 
         // Tao scene
@@ -53,17 +59,23 @@ public class BombermanGame extends Application  {
 
         // Them scene vao stage
         stage.setScene(scene);
+        stage.setTitle("Bomberman");
         stage.show();
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                render();
-                update(scene);
+                if (running) {
+                    MainMenu.MenuControl(scene);
+                    MainMenu.updateMenu(scene);
+                }
+                else {
+                    render();
+                    update(scene);
+                }
             }
         };
         timer.start();
-        createMap(scene, "Level1.txt");
     }
 
     public static void createMap(Scene scene, String last) {
@@ -130,45 +142,47 @@ public class BombermanGame extends Application  {
     }
 
     public void update(Scene scene) {
-        if(NttGroup.bombers.bombs.size()>0) {
-            NttGroup.bombers.checkBomb();
-        }
-        if(NttGroup.gamePortal != null) {
-            NttGroup.gamePortal.changeLevel(scene);
-        }
-        for (int i = 0; i<NttGroup.itemsList.size();i++) {
-            NttGroup.itemsList.get(i).checkPlayerGet(i);
-        }
-        if (NttGroup.bombers.isFlamePass() || NttGroup.bombers.isBombPass()) {
-            NttGroup.bombers.timeOutItem();
-        }
-        for(int i=0;i<NttGroup.enemyList.size();i++) {
-            if(NttGroup.enemyList.get(i).checkBoundFlame()
-                    && NttGroup.enemyList.get(i).isAlive()) {
-                NttGroup.enemyList.get(i).setSpeed(0);
-                NttGroup.enemyList.get(i).setAlive(false);
-                NttGroup.enemyList.get(i).setCollisionStart(LocalDateTime.now());
-                NttGroup.enemyList.get(i).setSpecificDead();
+        if (NttGroup.bombers != null && !running) {
+            if (NttGroup.bombers.bombs.size() > 0) {
+                NttGroup.bombers.checkBomb();
             }
-            if(!NttGroup.enemyList.get(i).isAlive()
-                    && NttGroup.enemyList.get(i).checkDisappear()) {
-                NttGroup.enemyList.remove(i);
-                i--;
+            if (NttGroup.gamePortal != null) {
+                NttGroup.gamePortal.changeLevel(scene);
             }
-        }
-        if((NttGroup.bombers.checkBoundFlame() && !NttGroup.bombers.isFlamePass())
-                || NttGroup.bombers.checkBoundEnemy()) {
-            NttGroup.bombers.setDie();
-        }
-        if(!NttGroup.bombers.isAlive) {
-            NttGroup.bombers.reset();
-        }
-        if(NttGroup.flames.size()>0) {
-            NttGroup.flames.forEach(Flame::update);
-            for (int i=0;i<NttGroup.flames.size();i++) {
-                if(NttGroup.flames.get(i).checkEndFlame()) {
-                    NttGroup.flames.remove(i);
+            for (int i = 0; i < NttGroup.itemsList.size(); i++) {
+                NttGroup.itemsList.get(i).checkPlayerGet(i);
+            }
+            if (NttGroup.bombers.isFlamePass() || NttGroup.bombers.isBombPass()) {
+                NttGroup.bombers.timeOutItem();
+            }
+            for (int i = 0; i < NttGroup.enemyList.size(); i++) {
+                if (NttGroup.enemyList.get(i).checkBoundFlame()
+                        && NttGroup.enemyList.get(i).isAlive()) {
+                    NttGroup.enemyList.get(i).setSpeed(0);
+                    NttGroup.enemyList.get(i).setAlive(false);
+                    NttGroup.enemyList.get(i).setCollisionStart(LocalDateTime.now());
+                    NttGroup.enemyList.get(i).setSpecificDead();
+                }
+                if (!NttGroup.enemyList.get(i).isAlive()
+                        && NttGroup.enemyList.get(i).checkDisappear()) {
+                    NttGroup.enemyList.remove(i);
                     i--;
+                }
+            }
+            if ((NttGroup.bombers.checkBoundFlame() && !NttGroup.bombers.isFlamePass())
+                    || NttGroup.bombers.checkBoundEnemy()) {
+                NttGroup.bombers.setDie();
+            }
+            if (!NttGroup.bombers.isAlive) {
+                NttGroup.bombers.reset();
+            }
+            if (NttGroup.flames.size() > 0) {
+                NttGroup.flames.forEach(Flame::update);
+                for (int i = 0; i < NttGroup.flames.size(); i++) {
+                    if (NttGroup.flames.get(i).checkEndFlame()) {
+                        NttGroup.flames.remove(i);
+                        i--;
+                    }
                 }
             }
         }
@@ -188,6 +202,8 @@ public class BombermanGame extends Application  {
         if(NttGroup.gamePortal != null) {
             NttGroup.gamePortal.render(gc);
         }
-        NttGroup.bombers.render(gc);
+        if(NttGroup.bombers != null){
+            NttGroup.bombers.render(gc);
+        }
     }
 }
