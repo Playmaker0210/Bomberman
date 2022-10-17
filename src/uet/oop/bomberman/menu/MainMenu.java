@@ -15,7 +15,7 @@ import uet.oop.bomberman.entities.NttGroup;
 import static uet.oop.bomberman.BombermanGame.createMap;
 
 public class MainMenu {
-    private static ImageView startGame;
+    private static Text startGame;
     public static Text level, bomb, time;
     public static boolean running;
     private static boolean isStart;
@@ -47,22 +47,31 @@ public class MainMenu {
         time.setX(608);
         time.setY(20);
 
-        Image newGame = new Image("menu/StartGame.png");
-        startGame = new ImageView(newGame);
-        startGame.setX(400);
-        startGame.setY(300);
-        startGame.setScaleX(1);
-        startGame.setScaleY(1);
-        startButton = new ImageView(newGame);
+        startGame = new Text("START");
+        startGame.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        startGame.setFill(Color.WHITE);
+        startGame.setX(300);
+        startGame.setY(320);
         root.getChildren().add(startGame);
 
     }
 
     public static void MenuControl(Scene scene) {
+        scene.setOnMouseMoved(event -> {
+            //System.out.println(event.getX() + " " + event.getY());
+            if (event.getX() - startGame.getX() <= 140 && event.getX() >= startGame.getX()
+                    && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
+                startGame.setFill(Color.YELLOW);
+            }
+            else {
+                startGame.setFill(Color.WHITE);
+            }
+        });
+
         scene.setOnMouseClicked(event -> {
-            //System.out.println((event.getX() - startGame.getX()) + " " + (event.getY() - startGame.getY()));
-            if (event.getX() - startGame.getX() <= 179 && event.getX() >= startGame.getX()
-                    && event.getY() - startGame.getY() <= 42 && event.getY() >= startGame.getY()) {
+            //System.out.println(event.getX() + " " + event.getY());
+            if (event.getX() - startGame.getX() <= 140 && event.getX() >= startGame.getX()
+                    && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
                 isStart = true;
             }
         });
