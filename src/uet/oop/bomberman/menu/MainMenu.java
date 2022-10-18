@@ -1,17 +1,14 @@
 package uet.oop.bomberman.menu;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import uet.oop.bomberman.entities.NttGroup;
 
 import java.time.LocalDateTime;
 
@@ -23,11 +20,14 @@ public class MainMenu {
     private static Text sounds;
     private static Text highScore;
     private static Text exitGame;
+    public static Text backButton;
     public static boolean running;
     private static boolean isStart;
     private static boolean isSoundOn;
+    private static boolean showTutorial;
     public static ImageView authorView;
     private static Prepare prepare;
+    private static Tutorial instr;
     public static Group menuRoot;
 
     public static void createMenu(Group root) {
@@ -36,6 +36,8 @@ public class MainMenu {
         menuRoot = root;
         isSoundOn = true;
         prepare = null;
+        instr = null;
+        showTutorial = false;
 
         Image author = new Image("menu/GameMenu.png");
         authorView = new ImageView(author);
@@ -79,68 +81,100 @@ public class MainMenu {
         exitGame.setX(755);
         exitGame.setY(320);
         root.getChildren().add(exitGame);
+
+        backButton = new Text("BACK");
+        backButton.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        backButton.setFill(Color.WHITE);
+        backButton.setX(450);
+        backButton.setY(350);
     }
 
     public static void MenuControl(Scene scene) {
         scene.setOnMouseMoved(event -> {
             //System.out.println(event.getX() + " " + event.getY());
-            if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
-                    && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
-                startGame.setFill(Color.YELLOW);
+            if (!showTutorial) {
+                if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
+                        && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
+                    startGame.setFill(Color.YELLOW);
+                } else {
+                    startGame.setFill(Color.WHITE);
+                }
+
+                if (event.getX() - tutorial.getX() <= 142 && event.getX() >= tutorial.getX()
+                        && tutorial.getY() - event.getY() <= 28 && event.getY() <= tutorial.getY()) {
+                    tutorial.setFill(Color.YELLOW);
+                } else {
+                    tutorial.setFill(Color.WHITE);
+                }
+
+                if (event.getX() - sounds.getX() <= 178 && event.getX() >= sounds.getX()
+                        && sounds.getY() - event.getY() <= 28 && event.getY() <= sounds.getY()) {
+                    sounds.setFill(Color.YELLOW);
+                } else {
+                    sounds.setFill(Color.WHITE);
+                }
+
+                if (event.getX() - highScore.getX() <= 178 && event.getX() >= highScore.getX()
+                        && highScore.getY() - event.getY() <= 28 && event.getY() <= highScore.getY()) {
+                    highScore.setFill(Color.YELLOW);
+                } else {
+                    highScore.setFill(Color.WHITE);
+                }
+
+                if (event.getX() - exitGame.getX() <= 65 && event.getX() >= exitGame.getX()
+                        && exitGame.getY() - event.getY() <= 28 && event.getY() <= exitGame.getY()) {
+                    exitGame.setFill(Color.YELLOW);
+                } else {
+                    exitGame.setFill(Color.WHITE);
+                }
             }
+
             else {
-                startGame.setFill(Color.WHITE);
-            }
-            if (event.getX() - tutorial.getX() <= 142 && event.getX() >= tutorial.getX()
-                    && tutorial.getY() - event.getY() <= 28 && event.getY() <= tutorial.getY()) {
-                tutorial.setFill(Color.YELLOW);
-            }
-            else {
-                tutorial.setFill(Color.WHITE);
-            }
-            if (event.getX() - sounds.getX() <= 178 && event.getX() >= sounds.getX()
-                    && sounds.getY() - event.getY() <= 28 && event.getY() <= sounds.getY()) {
-                sounds.setFill(Color.YELLOW);
-            }
-            else {
-                sounds.setFill(Color.WHITE);
-            }
-            if (event.getX() - highScore.getX() <= 178 && event.getX() >= highScore.getX()
-                    && highScore.getY() - event.getY() <= 28 && event.getY() <= highScore.getY()) {
-                highScore.setFill(Color.YELLOW);
-            }
-            else {
-                highScore.setFill(Color.WHITE);
-            }
-            if (event.getX() - exitGame.getX() <= 65 && event.getX() >= exitGame.getX()
-                    && exitGame.getY() - event.getY() <= 28 && event.getY() <= exitGame.getY()) {
-                exitGame.setFill(Color.YELLOW);
-            }
-            else {
-                exitGame.setFill(Color.WHITE);
+                if (event.getX() - backButton.getX() <= 80 && event.getX() >= backButton.getX()
+                        && backButton.getY() - event.getY() <= 28 && event.getY() <= backButton.getY()) {
+                    backButton.setFill(Color.YELLOW);
+                }
+                else {
+                    backButton.setFill(Color.WHITE);
+                }
             }
         });
 
         scene.setOnMouseClicked(event -> {
             //System.out.println(event.getX() + " " + event.getY());
-            if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
-                    && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
-                isStart = true;
-            }
-            if (event.getX() - sounds.getX() <= 178 && event.getX() >= sounds.getX()
-                    && sounds.getY() - event.getY() <= 28 && event.getY() <= sounds.getY()) {
-                if(isSoundOn) {
-                    sounds.setText("SOUNDS: OFF");
-                    isSoundOn = false;
+            if (!showTutorial) {
+                if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
+                        && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
+                    isStart = true;
                 }
-                else {
-                    sounds.setText("SOUNDS: ON");
-                    isSoundOn = true;
+
+                if (event.getX() - tutorial.getX() <= 142 && event.getX() >= tutorial.getX()
+                        && tutorial.getY() - event.getY() <= 28 && event.getY() <= tutorial.getY()) {
+                    showTutorial = true;
+                }
+
+                if (event.getX() - sounds.getX() <= 178 && event.getX() >= sounds.getX()
+                        && sounds.getY() - event.getY() <= 28 && event.getY() <= sounds.getY()) {
+                    if (isSoundOn) {
+                        sounds.setText("SOUNDS: OFF");
+                        isSoundOn = false;
+                    } else {
+                        sounds.setText("SOUNDS: ON");
+                        isSoundOn = true;
+                    }
+                }
+
+                if (event.getX() - exitGame.getX() <= 65 && event.getX() >= exitGame.getX()
+                        && exitGame.getY() - event.getY() <= 28 && event.getY() <= exitGame.getY()) {
+                    Platform.exit();
                 }
             }
-            if (event.getX() - exitGame.getX() <= 65 && event.getX() >= exitGame.getX()
-                    && exitGame.getY() - event.getY() <= 28 && event.getY() <= exitGame.getY()) {
-                Platform.exit();
+
+            else {
+                if (event.getX() - backButton.getX() <= 80 && event.getX() >= backButton.getX()
+                        && backButton.getY() - event.getY() <= 28 && event.getY() <= backButton.getY()) {
+                    showTutorial = false;
+                }
             }
         });
     }
@@ -160,6 +194,20 @@ public class MainMenu {
                     prepare = null;
                     running = false;
                 }
+            }
+        }
+        if (showTutorial) {
+            if(instr == null) {
+                instr = new Tutorial(menuRoot);
+                menuRoot.getChildren().add(backButton);
+            }
+        }
+        else {
+            if (instr != null) {
+                menuRoot.getChildren().remove(instr.tutorialView);
+                menuRoot.getChildren().remove(backButton);
+                menuRoot.getChildren().remove(instr.instruct);
+                instr = null;
             }
         }
     }
