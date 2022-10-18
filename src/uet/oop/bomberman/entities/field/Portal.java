@@ -2,12 +2,14 @@ package uet.oop.bomberman.entities.field;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.menu.MainMenu;
 
-import static uet.oop.bomberman.BombermanGame.createMap;
-import static uet.oop.bomberman.BombermanGame.level;
+import static uet.oop.bomberman.BombermanGame.*;
+import static uet.oop.bomberman.menu.MainMenu.menuRoot;
 
 public class Portal extends Entity {
     public Portal (int x, int y, Image img) {
@@ -23,11 +25,21 @@ public class Portal extends Entity {
         int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
         int playerY = NttGroup.bombers.getY()/Sprite.SCALED_SIZE;
         if (idX == playerX && idY == playerY && NttGroup.enemyList.size() == 0) {
+            playerScore += (level*200);
             if (level < 3) {
                 level++;
-                String tmp = "Level" + Integer.toString(level) + ".txt";
                 NttGroup.reset();
-                createMap(scene, tmp);
+                MainMenu.running = true;
+                MainMenu.showNext = true;
+                MainMenu.showType = MainMenu.SHOW_SATGE;
+            }
+            else {
+                BombermanGame.makeEndGame();
+                MainMenu.running=true;
+                MainMenu.isStart = false;
+                NttGroup.reset();
+                MainMenu.showType = MainMenu.SHOW_END;
+                MainMenu.showEnd = true;
             }
         }
     }

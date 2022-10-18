@@ -2,7 +2,13 @@ package uet.oop.bomberman.Player;
 
 import javafx.scene.Scene;
 import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.menu.MainMenu;
+
+import java.time.LocalDateTime;
+
+import static uet.oop.bomberman.menu.MainMenu.*;
 
 public class PlayerController {
     public static void bomberController(Scene scene, Bomber bomberman) {
@@ -27,6 +33,16 @@ public class PlayerController {
                         if (bomberman.detonator.size()>0) {
                             bomberman.detonate();
                         }
+                    } else if (event.getCode().toString().equals("P")) {
+                        NttGroup.timePause = LocalDateTime.now();
+                        MainMenu.running = true;
+                        MainMenu.isStart = false;
+                        menuRoot.getChildren().add(authorView);
+                        menuRoot.getChildren().add(startGame);
+                        menuRoot.getChildren().add(highScore);
+                        menuRoot.getChildren().add(exitGame);
+                        menuRoot.getChildren().add(sounds);
+                        menuRoot.getChildren().add(tutorial);
                     }
                 }
         );

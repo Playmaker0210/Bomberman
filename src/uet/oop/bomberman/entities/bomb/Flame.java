@@ -34,6 +34,10 @@ public class Flame extends Entity {
         imgCounter = 0;
     }
 
+    public LocalDateTime getTimeStartFlame() {
+        return timeStartFlame;
+    }
+
     public void removeBrick(int idX, int idY, int vt) {
         NttGroup.brickList.remove(vt);
         NttGroup.map[idX][idY] = NttGroup.origin[idX][idY];
@@ -146,7 +150,7 @@ public class Flame extends Entity {
             if(imgCounter==18) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded1.getFxImage());
             if(imgCounter==27) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded2.getFxImage());
         }
-        if (tmp >= 240) {
+        if (tmp - NttGroup.diffTime >= 240) {
             for(int i=0;i<crackList.size();i++) {
                 int vt = crackList.get(i).originalPlace-i;
                 int idX = crackList.get(i).getX() / Sprite.SCALED_SIZE;

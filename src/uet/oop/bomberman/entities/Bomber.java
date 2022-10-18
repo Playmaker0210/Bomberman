@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 import uet.oop.bomberman.graphics.SpriteSheet;
+import uet.oop.bomberman.menu.MainMenu;
 
 import javax.management.DynamicMBean;
 import java.time.Duration;
@@ -71,6 +72,18 @@ public class Bomber extends Entity {
     }
     public int getNumDetonator() {
         return numDetonator;
+    }
+
+    public LocalDateTime getTimeGetBombPass() {
+        return timeGetBombPass;
+    }
+
+    public LocalDateTime getTimeGetFlamePass() {
+        return timeGetFlamePass;
+    }
+
+    public LocalDateTime getTimeDie() {
+        return timeDie;
     }
 
     public void activeBomb() {
@@ -150,12 +163,12 @@ public class Bomber extends Entity {
         for(int i=0;i<bombs.size();i++) {
             bombs.get(i).timeStop= LocalDateTime.now();
             int tmp = (int) Duration.between(bombs.get(i).timePut,bombs.get(i).timeStop).toMillis();
-            if(tmp%10==0)
+            if((tmp-NttGroup.diffTime)%10==0)
             {
                 bombs.get(i).setImg(Sprite.movingSprite(Sprite.bomb,Sprite.bomb_1,
                         Sprite.bomb_2,tmp/10,76).getFxImage());
             }
-            if(tmp>=2000) {
+            if(tmp-NttGroup.diffTime>=2000) {
                 bombs.get(i).explosion(bombRadius);
                 NttGroup.bombList.remove(i);
                 int idX = bombs.get(i).getX()/Sprite.SCALED_SIZE;
@@ -218,12 +231,12 @@ public class Bomber extends Entity {
     public void timeOutItem() {
         LocalDateTime checkTime = LocalDateTime.now();
         if (flamePass) {
-            if (Duration.between(timeGetFlamePass,checkTime).toSeconds() >= 20) {
+            if (Duration.between(timeGetFlamePass,checkTime).toSeconds() >= 20 + NttGroup.diffTime/1000) {
                 flamePass = false;
             }
         }
         if (bombPass) {
-            if(Duration.between(timeGetBombPass,checkTime).toSeconds() >= 20) {
+            if(Duration.between(timeGetBombPass,checkTime).toSeconds() >= 20 + NttGroup.diffTime/1000) {
                 bombPass = false;
             }
         }
@@ -242,12 +255,19 @@ public class Bomber extends Entity {
         if (imgCounter==75) setImg(Sprite.player_dead2.getFxImage());
         if (imgCounter==150) setImg(Sprite.player_dead3.getFxImage());
         if (imgCounter==200) setImg(Sprite.grass.getFxImage());
-        if(tmp>=1500) {
-            this.x=32;
-            this.y=32;
-            isAlive = true;
-            imgCounter=0;
-            setImg(Sprite.player_down.getFxImage());
+        if(tmp - NttGroup.diffTime>=1500) {
+            BombermanGame.playerLife--;
+            if (BombermanGame.playerLife > 0) {
+                this.x = 32;
+                this.y = 32;
+                isAlive = true;
+                imgCounter = 0;
+                setImg(Sprite.player_down.getFxImage());
+                NttGroup.reset();
+                MainMenu.running = true;
+                MainMenu.showNext = true;
+                MainMenu.showType = MainMenu.SHOW_SATGE;
+            }
         }
     }
 }

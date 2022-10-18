@@ -9,26 +9,36 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import uet.oop.bomberman.entities.NttGroup;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static uet.oop.bomberman.BombermanGame.createMap;
+import static uet.oop.bomberman.BombermanGame.*;
 
 public class MainMenu {
-    private static Text startGame;
-    private static Text tutorial;
-    private static Text sounds;
-    private static Text highScore;
-    private static Text exitGame;
+    public static Text startGame;
+    public static Text tutorial;
+    public static Text sounds;
+    public static Text highScore;
+    public static Text exitGame;
     public static Text backButton;
     public static boolean running;
-    private static boolean isStart;
+    public static boolean isStart;
+    public static boolean showNext;
     private static boolean isSoundOn;
     private static boolean showTutorial;
+    public static boolean showEnd;
+    public static boolean playerLose;
     public static ImageView authorView;
     private static Prepare prepare;
-    private static Tutorial instr;
     public static Group menuRoot;
+    public static final int SHOW_SATGE = 0;
+    public static final int SHOW_TUTORIAL = 1;
+    public static final int SHOW_HIGH = 2;
+    public static final int SHOW_END = 3;
+    public static int showType;
+
 
     public static void createMenu(Group root) {
         running = true;
@@ -36,8 +46,10 @@ public class MainMenu {
         menuRoot = root;
         isSoundOn = true;
         prepare = null;
-        instr = null;
         showTutorial = false;
+        showNext = false;
+        showType = -1;
+        showEnd = false;
 
         Image author = new Image("menu/GameMenu.png");
         authorView = new ImageView(author);
@@ -92,7 +104,7 @@ public class MainMenu {
     public static void MenuControl(Scene scene) {
         scene.setOnMouseMoved(event -> {
             //System.out.println(event.getX() + " " + event.getY());
-            if (!showTutorial) {
+            if (!showTutorial && !showEnd) {
                 if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
                         && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
                     startGame.setFill(Color.YELLOW);
@@ -142,15 +154,23 @@ public class MainMenu {
 
         scene.setOnMouseClicked(event -> {
             //System.out.println(event.getX() + " " + event.getY());
-            if (!showTutorial) {
+            if (!showTutorial && !showEnd) {
                 if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
                         && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
                     isStart = true;
+                    if(NttGroup.bombers == null) {
+                        showNext = true;
+                        showType = SHOW_SATGE;
+                    }
+                    else {
+                        NttGroup.diffTime = (int) Duration.between(NttGroup.timePause, LocalDateTime.now()).toMillis();
+                    }
                 }
 
                 if (event.getX() - tutorial.getX() <= 142 && event.getX() >= tutorial.getX()
                         && tutorial.getY() - event.getY() <= 28 && event.getY() <= tutorial.getY()) {
                     showTutorial = true;
+                    showType = SHOW_TUTORIAL;
                 }
 
                 if (event.getX() - sounds.getX() <= 178 && event.getX() >= sounds.getX()
@@ -173,41 +193,96 @@ public class MainMenu {
             else {
                 if (event.getX() - backButton.getX() <= 80 && event.getX() >= backButton.getX()
                         && backButton.getY() - event.getY() <= 28 && event.getY() <= backButton.getY()) {
-                    showTutorial = false;
+                    if(showType == SHOW_TUTORIAL) {
+                        showTutorial = false;
+                    }
+                    if(showType == SHOW_END) {
+                        showEnd = false;
+                    }
                 }
             }
         });
     }
 
     public static void updateMenu(Scene scene) {
+        if (NttGroup.bombers != null) {
+            startGame.setText("RESUME");
+        }
+        else {
+            startGame.setText("START");
+        }
         if(isStart) {
             menuRoot.getChildren().remove(authorView);
-            if (prepare == null) {
-                prepare = new Prepare(menuRoot);
-                prepare.startPre = LocalDateTime.now();
-            }
-            if (prepare != null) {
-                if (prepare.checkEnd()) {
-                    menuRoot.getChildren().remove(prepare.prepareView);
-                    menuRoot.getChildren().remove(prepare.stage);
-                    createMap(scene, "Level1.txt");
-                    prepare = null;
-                    running = false;
-                }
+            menuRoot.getChildren().remove(startGame);
+            menuRoot.getChildren().remove(highScore);
+            menuRoot.getChildren().remove(exitGame);
+            menuRoot.getChildren().remove(sounds);
+            menuRoot.getChildren().remove(tutorial);
+            if(NttGroup.bombers != null) {
+                running = false;
             }
         }
-        if (showTutorial) {
-            if(instr == null) {
-                instr = new Tutorial(menuRoot);
+        if (prepare == null && showNext && showType == SHOW_SATGE) {
+            prepare = new Prepare(menuRoot);
+            menuRoot.getChildren().add(prepare.stage);
+            prepare.startPre = LocalDateTime.now();
+        }
+        else if (prepare != null && showNext && showType == SHOW_SATGE) {
+            if (prepare.checkEnd()) {
+                menuRoot.getChildren().remove(prepare.prepareView);
+                menuRoot.getChildren().remove(prepare.stage);
+                createMap(scene, "Level" + Integer.toString(level) +".txt");
+                prepare = null;
+                running = false;
+                showNext = false;
+                showType = -1;
+            }
+        }
+        if (showTutorial && showType == SHOW_TUTORIAL) {
+            if(prepare == null) {
+                prepare = new Prepare(menuRoot);
+                menuRoot.getChildren().add(prepare.instruct);
                 menuRoot.getChildren().add(backButton);
             }
         }
-        else {
-            if (instr != null) {
-                menuRoot.getChildren().remove(instr.tutorialView);
+        else if (!showTutorial && showType == SHOW_TUTORIAL) {
+            if (prepare != null) {
+                menuRoot.getChildren().remove(prepare.prepareView);
                 menuRoot.getChildren().remove(backButton);
-                menuRoot.getChildren().remove(instr.instruct);
-                instr = null;
+                menuRoot.getChildren().remove(prepare.instruct);
+                prepare = null;
+                showType = -1;
+            }
+        }
+        if (showType == SHOW_END) {
+            if (prepare == null) {
+                prepare = new Prepare(menuRoot);
+                if (playerLose) {
+                    prepare.endGame.setText("YOU LOSE\n\n\n\nYour score\n");
+                }
+                menuRoot.getChildren().add(prepare.endGame);
+                menuRoot.getChildren().add(prepare.point);
+                menuRoot.getChildren().add(backButton);
+            }
+            else {
+                if (!showEnd) {
+                    menuRoot.getChildren().remove(prepare.prepareView);
+                    menuRoot.getChildren().remove(backButton);
+                    menuRoot.getChildren().remove(prepare.endGame);
+                    menuRoot.getChildren().remove(prepare.point);
+                    prepare = null;
+                    showType = -1;
+                    menuRoot.getChildren().add(authorView);
+                    menuRoot.getChildren().add(startGame);
+                    menuRoot.getChildren().add(highScore);
+                    menuRoot.getChildren().add(exitGame);
+                    menuRoot.getChildren().add(sounds);
+                    menuRoot.getChildren().add(tutorial);
+                    playerLife = 3;
+                    playerLose = false;
+                    level = 1;
+                    playerScore = 0;
+                }
             }
         }
     }

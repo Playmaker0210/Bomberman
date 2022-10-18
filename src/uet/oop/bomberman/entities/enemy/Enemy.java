@@ -123,6 +123,10 @@ public abstract class Enemy extends Entity {
         collisionStart = tmp;
     }
 
+    public LocalDateTime getCollisionStart() {
+        return collisionStart;
+    }
+
     public abstract void setSpecificDead();
     public boolean checkDisappear() {
         imgCounter++;
@@ -131,7 +135,7 @@ public abstract class Enemy extends Entity {
         if (imgCounter == 40) setImg(Sprite.mob_dead1.getFxImage());
         if (imgCounter == 69) setImg(Sprite.mob_dead2.getFxImage());
         if (imgCounter == 98) setImg(Sprite.mob_dead3.getFxImage());
-        if (tmp >= 1300) {
+        if (tmp - NttGroup.diffTime >= 1300) {
             return true;
         }
         return false;
