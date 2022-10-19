@@ -28,6 +28,7 @@ public class MainMenu {
     public static boolean showNext;
     private static boolean isSoundOn;
     private static boolean showTutorial;
+    private static boolean showHigh;
     public static boolean showEnd;
     public static boolean playerLose;
     public static ImageView authorView;
@@ -50,6 +51,7 @@ public class MainMenu {
         showNext = false;
         showType = -1;
         showEnd = false;
+        showHigh = false;
 
         Image author = new Image("menu/GameMenu.png");
         authorView = new ImageView(author);
@@ -104,7 +106,7 @@ public class MainMenu {
     public static void MenuControl(Scene scene) {
         scene.setOnMouseMoved(event -> {
             //System.out.println(event.getX() + " " + event.getY());
-            if (!showTutorial && !showEnd) {
+            if (!showTutorial && !showEnd && !showHigh) {
                 if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
                         && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
                     startGame.setFill(Color.YELLOW);
@@ -154,7 +156,7 @@ public class MainMenu {
 
         scene.setOnMouseClicked(event -> {
             //System.out.println(event.getX() + " " + event.getY());
-            if (!showTutorial && !showEnd) {
+            if (!showTutorial && !showEnd && !showHigh) {
                 if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
                         && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
                     isStart = true;
@@ -199,7 +201,16 @@ public class MainMenu {
                     if(showType == SHOW_END) {
                         showEnd = false;
                     }
+                    if(showType == SHOW_HIGH) {
+                        showHigh =false;
+                    }
                 }
+            }
+
+            if (event.getX() - highScore.getX() <= 178 && event.getX() >= highScore.getX()
+                    && highScore.getY() - event.getY() <= 28 && event.getY() <= highScore.getY()) {
+                showType = SHOW_HIGH;
+                showHigh = true;
             }
         });
     }
@@ -282,6 +293,24 @@ public class MainMenu {
                     playerLose = false;
                     level = 1;
                     playerScore = 0;
+                }
+            }
+        }
+        if (showType == SHOW_HIGH) {
+            if (prepare == null) {
+                prepare = new Prepare(menuRoot);
+                prepare.createScore();
+                menuRoot.getChildren().add(backButton);
+            }
+            else {
+                if (!showHigh) {
+                    menuRoot.getChildren().remove(prepare.prepareView);
+                    menuRoot.getChildren().remove(backButton);
+                    for (int i =0; i<5;i++) {
+                        menuRoot.getChildren().remove(prepare.scoreList[i]);
+                    }
+                    prepare = null;
+                    showType = -1;
                 }
             }
         }

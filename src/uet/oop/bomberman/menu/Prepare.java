@@ -11,8 +11,7 @@ import javafx.scene.text.Text;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static uet.oop.bomberman.BombermanGame.level;
-import static uet.oop.bomberman.BombermanGame.playerScore;
+import static uet.oop.bomberman.BombermanGame.*;
 
 public class Prepare {
     public Group prepareRoot;
@@ -22,6 +21,7 @@ public class Prepare {
     public Text instruct;
     public Text endGame;
     public Text point;
+    public Text[] scoreList = new Text[5];
 
     public Prepare(Group root) {
         prepareRoot = root;
@@ -42,7 +42,7 @@ public class Prepare {
 
         String res = "Dùng các phím mũi tên để di chuyển, phím SPACE để đặt bom.\n\n" +
                 "Dùng phím D để đặt bom hẹn giờ, phím F để cho nổ bom hẹn giờ đã đặt sớm nhất.\n\n" +
-                "Dùng phím ESC để tạm dừng game.";
+                "Dùng phím P để tạm dừng game.";
         instruct = new Text(res);
         instruct.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         instruct.setFill(Color.ORANGERED);
@@ -78,5 +78,36 @@ public class Prepare {
             return true;
         }
         return false;
+    }
+
+    public void createScore() {
+        int[] arr= new int[5];
+        String space;
+        if (highscore.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < 5; i++) {
+            arr[i] = highscore.remove();
+            scoreList[4-i] = new Text();
+            scoreList[4-i].setFill(Color.AZURE);
+            scoreList[4-i].setFont(Font.font("Arial", FontWeight.BOLD, 30));
+            scoreList[4-i].setX(300);
+            scoreList[4-i].setY(50 + 60* (4-i));
+            if (arr[i] < 1000 && arr[i] > 0) {
+                space = "\t\t\t";
+            }
+            else if (arr[i] >= 1000) {
+                space = "\t\t      ";
+            }
+            else {
+                space = "\t\t\t    ";
+            }
+            String texture = "Rank " + Integer.toString(5-i) + space + Integer.toString(arr[i]);
+            scoreList[4-i].setText(texture);
+            prepareRoot.getChildren().add(scoreList[4-i]);
+        }
+        for (int i =0;i < 5;i ++) {
+            highscore.add(arr[i]);
+        }
     }
 }

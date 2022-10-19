@@ -75,6 +75,10 @@ public class BombermanGame extends Application  {
                     render();
                     update(scene);
                 }
+                if (NttGroup.bombers != null) {
+                    stage.setTitle("Bomberman     Score: " + Integer.toString(playerScore)
+                    + "     Left: " + Integer.toString(playerLife));
+                }
             }
         };
         timer.start();
