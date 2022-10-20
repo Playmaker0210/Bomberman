@@ -6,7 +6,7 @@ import uet.oop.bomberman.graphics.Sprite;
 public class Enemy2 extends Enemy{
     public Enemy2(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
-        this.setSpeed(1);
+        this.setSpeedX(1);
     }
     @Override
     public void update() {

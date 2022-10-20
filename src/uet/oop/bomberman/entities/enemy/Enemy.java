@@ -7,14 +7,13 @@ import uet.oop.bomberman.graphics.Sprite;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Random;
 
 public abstract class Enemy extends Entity {
 
     private int speed = 1;
     private int speedX = 0;
-    private int speedY = this.speed;
+    private int speedY = 0;
     private int imgCounter = 0;
 
     private LocalDateTime collisionStart;

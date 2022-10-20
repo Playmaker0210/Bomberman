@@ -1,22 +1,13 @@
 package uet.oop.bomberman.entities;
 
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.bomb.Bomb;
-import uet.oop.bomberman.entities.field.Grass;
 import uet.oop.bomberman.entities.field.Items;
 import uet.oop.bomberman.graphics.Sprite;
-import javafx.event.Event;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.event.ActionEvent;
-import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.menu.MainMenu;
+import uet.oop.bomberman.menu.Sound;
 
-import javax.management.DynamicMBean;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,17 +43,6 @@ public class Bomber extends Entity {
         return numBombs;
     }
 
-    public void setNumBombs(int numBombs) {
-        this.numBombs= numBombs;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
     public boolean isFlamePass() {
         return flamePass;
     }
@@ -169,6 +149,9 @@ public class Bomber extends Entity {
                         Sprite.bomb_2,tmp/10,76).getFxImage());
             }
             if(tmp-NttGroup.diffTime>=2000) {
+                if (BombermanGame.gameSound) {
+                    Sound.playSound("soundBomb");
+                }
                 bombs.get(i).explosion(bombRadius);
                 NttGroup.bombList.remove(i);
                 int idX = bombs.get(i).getX()/Sprite.SCALED_SIZE;
@@ -251,6 +234,9 @@ public class Bomber extends Entity {
         LocalDateTime checkTime = LocalDateTime.now();
         int tmp = (int) Duration.between(timeDie, checkTime).toMillis();
         imgCounter++;
+        if (imgCounter == 10 && BombermanGame.gameSound) {
+            Sound.playSound("soundDie");
+        }
         if (imgCounter==10) setImg(Sprite.player_dead1.getFxImage());
         if (imgCounter==75) setImg(Sprite.player_dead2.getFxImage());
         if (imgCounter==150) setImg(Sprite.player_dead3.getFxImage());

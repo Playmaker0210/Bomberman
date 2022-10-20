@@ -1,39 +1,50 @@
-2 13 31
+2 13 31 6
 ###############################
-#      ** *  1 * 2 *  * * *   #
-# # # #*# # #*#*# # # #*#*#*# #
-#  1*     ***  *  1   * 2 * * #
-# # # # # #*# # #*#*# # # # #*#
-#0         0 **  *  *   1     #
+#                             #
+# # #*#*#0#*#*#*#*#*#*#*#*#*# #
+# *2              1     3     #
+# # # #*#*#*#*#*#*#*#*#*#*# # #
+# * *      0 **  *  *   1   * #
 # # # # # # # # # #*# #*# # # #
-#p  *      *  *      *        #
-# # # # #*# # # #*#*# # # # # #
-#*    **  *       4           #
-# #*# # # # # # #*# # # # # # #
-#         3 *   *  *          #
+# * *      *  p      *      * #
+# # # #*#*#*#*#*#*#*#*#*#*#*# #
+# #               4         *  #
+# #*#*#*#*#2#*#*#*#*#*#*#*# # #
+#                             #
 ###############################
-
+1 1 10 2
+1 20 1 1
+1 29 5 2
+3 21 11
+1 9 9 1
+4 15 7 
 
 Mô tả cấu trúc tệp cấu hình màn chơi:
-1/ Dòng đầu tiên bao gồm 3 số nguyên L, R, C:
+1/ Dòng đầu tiên bao gồm 3 số nguyên L, R, C, N:
 L - số thứ tự màn chơi
 R - số hàng của bản đồ
 C - số cột của bản đồ
+N  -  số enemy của màn chơi 
 
 2/ R dòng tiếp theo, mỗi dòng có C kí tự. Mỗi kí tự đại diện cho một đối tượng trên bản đồ:
 Tiles:
 # - Wall
 * - Brick
-x - Portal
+p - Portal
 
-Character:
-p - Bomber
-1 - Balloon
-2 - Oneal
+3/ Items:
+0 - BombPass cho khả năng đi xuyên qua bom trong 20s
+1 - Bombs tăng số bom tối đa thêm 1
+2 - Detonator cho 2 bom có thể kích nổ tùy ý người chơi
+3  -  FlamePass cho khả năng đi kháng lửa trong 20s
+4  - Flames tăng kích cỡ flame khi nổ thêm 1
 
-Items:
-b - Bomb Item
-f - Flame Item
-s - Speed Item
+4/ N dòng tiếp theo, mỗi dòng có 1 trong 2 input dạng (1, x, y, direct) hoặc (type, x, y )
+- Với input dạng (1, x, y, direct):
+Là 1 enemy loại ballom, có tọa độ xuất hiện (x;y), nếu direct = 1 thì di chuyển ngang, nếu direct = 2 thì di chuyển dọc
 
-Kí tự khác các kí tự trên - Grass
+- Với input dạng (type, x, y):
+(x;y) là tọa độ xuất hiện của enemy
+type = 2 : enemy loại oneal, di chuyển theo hướng và tốc độ ngẫu nhiên
+type = 3 : enemy loại doll, có khả năng đuổi theo người chơi khi người chơi đến gần 
+type = 4 : enemy loại kondoria, có khả năng đuổi theo người chơi khi đến gần, và khi đuổi có thể đi xuyên địa hình (nhưng không thể ra khỏi map)

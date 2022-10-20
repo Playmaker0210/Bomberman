@@ -1,9 +1,11 @@
 package uet.oop.bomberman.entities.field;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.menu.Sound;
 
 public class Items extends Entity {
     private int type;
@@ -21,9 +23,6 @@ public class Items extends Entity {
         this.type = type;
     }
 
-    public int getType() {
-        return type;
-    }
 
     public void update() {
 
@@ -32,9 +31,10 @@ public class Items extends Entity {
     public void checkPlayerGet(int index) {
         int idX = this.x/ Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
-        int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
-        int playerY = NttGroup.bombers.getY()/Sprite.SCALED_SIZE;
-        if (idX == playerX && idY == playerY) {
+        if (this.intersect(NttGroup.bombers)) {
+            if (BombermanGame.gameSound) {
+                Sound.playSound("soundItem");
+            }
             NttGroup.bombers.getItem(type);
             NttGroup.itemsList.remove(index);
             NttGroup.map[idX][idY] = ' ';

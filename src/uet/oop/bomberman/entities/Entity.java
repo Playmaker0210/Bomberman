@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.field.Brick;
-import uet.oop.bomberman.entities.field.Items;
 import uet.oop.bomberman.entities.field.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -87,7 +86,12 @@ public abstract class Entity {
 
     public boolean checkBoundBomb() {
         for(Bomb bomb : NttGroup.bombList) {
-            if(this.intersect(bomb)&&bomb.activate) {return true;}
+            if(this instanceof Bomber) {
+                if(this.intersect(bomb)&&bomb.activate) {return true;}
+            }
+            else {
+                if(this.intersect(bomb)) {return true;}
+            }
         }
         return false;
     }

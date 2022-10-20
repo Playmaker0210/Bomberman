@@ -17,10 +17,11 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.Player.PlayerController;
 import uet.oop.bomberman.menu.MainMenu;
+import uet.oop.bomberman.menu.Sound;
+import uet.oop.bomberman.pathFinding.PathFinder;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.Formatter;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -34,6 +35,8 @@ public class BombermanGame extends Application  {
     public static int level = 1;
     public static int playerScore = 0;
     public static int playerLife = 3;
+    public static boolean gameSound = true;
+    public static PathFinder pathFinder = new PathFinder();
     public static PriorityQueue<Integer> highscore = new PriorityQueue<>();
 
     private GraphicsContext gc;
@@ -73,7 +76,7 @@ public class BombermanGame extends Application  {
                 }
                 else {
                     render();
-                    update(scene);
+                    update();
                 }
                 if (NttGroup.bombers != null) {
                     stage.setTitle("Bomberman     Score: " + Integer.toString(playerScore)
@@ -85,6 +88,7 @@ public class BombermanGame extends Application  {
     }
 
     public static void createMap(Scene scene, String last) {
+        pathFinder.instantiateNode();
         File url = new File("res/levels/" + last);
         // Đọc dữ liệu từ File với Scanner
         Scanner scanner = null;
@@ -96,7 +100,7 @@ public class BombermanGame extends Application  {
         level = scanner.nextInt();
         int hang = scanner.nextInt();
         int cot = scanner.nextInt();
-
+        int numEnemy = scanner.nextInt();
         for (int i = 0; i < hang; i++) {
             String X= scanner.next();
             X += scanner.nextLine();
@@ -115,12 +119,14 @@ public class BombermanGame extends Application  {
                         NttGroup.brickList.add((Brick) object);
                         NttGroup.map[j][i] = '*';
                         NttGroup.origin[j][i] = ' ';
+                        pathFinder.node[j][i].setSolid(true);
                     }
                     else if(k=='#'){
                         object = new Wall(j,i,Sprite.wall.getFxImage());
                         NttGroup.wallList.add((Wall) object);
                         NttGroup.map[j][i] = '#';
                         NttGroup.origin[j][i] = '#';
+                        pathFinder.node[j][i].setSolid(true);
                     }
                     else if(k==' '){
                         object = new Grass(j, i, Sprite.grass.getFxImage());
@@ -134,20 +140,54 @@ public class BombermanGame extends Application  {
                         NttGroup.brickList.add((Brick) object);
                         NttGroup.map[j][i] = '*';
                         NttGroup.origin[j][i] = k;
+                        pathFinder.node[j][i].setSolid(true);
                     }
                 }
             }
         }
-
+        for (int i = 0; i < numEnemy; i++) {
+            int type = scanner.nextInt();
+            if (type == 1) {
+                int x = scanner.nextInt();
+                int y = scanner.nextInt();
+                int direct = scanner.nextInt();
+                Enemy enemy = new Enemy1(x, y, Sprite.balloom_left2.getFxImage());
+                if (direct == 1) {
+                    enemy.setSpeedX(enemy.getSpeed());
+                }
+                else {
+                    enemy.setSpeedY(enemy.getSpeed());
+                }
+                NttGroup.enemyList.add(enemy);
+            }
+            else {
+                int x = scanner.nextInt();
+                int y = scanner.nextInt();
+                Enemy enemy;
+                if (type == 2) {
+                    enemy = new Enemy2(x, y, Sprite.oneal_right2.getFxImage());
+                }
+                else if (type == 3) {
+                    enemy = new Enemy3(x, y, Sprite.doll_left2.getFxImage());
+                }
+                else {
+                    enemy = new Enemy4(x, y, Sprite.kondoria_right1.getFxImage());
+                }
+                NttGroup.enemyList.add(enemy);
+            }
+        }
+        scanner.close();
         Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         NttGroup.bombers = (Bomber) bomberman;
-        //Entity en = new Enemy2(25, 5, Sprite.doll_right1.getFxImage());
-        //NttGroup.enemyList.add((Enemy) en);
         PlayerController.bomberController(scene, NttGroup.bombers);
     }
 
-    public void update(Scene scene) {
+    public void update() {
         if(playerLife == 0) {
+            if (gameSound) {
+                Sound.playSound("soundLose");
+            }
+            playerLose = true;
             makeEndGame();
             return;
         }
@@ -159,7 +199,7 @@ public class BombermanGame extends Application  {
                 NttGroup.bombers.checkBomb();
             }
             if (NttGroup.gamePortal != null) {
-                NttGroup.gamePortal.changeLevel(scene);
+                NttGroup.gamePortal.changeLevel();
             }
             if (NttGroup.bombers == null) {
                 return;
@@ -211,7 +251,6 @@ public class BombermanGame extends Application  {
         NttGroup.brickList.forEach(g -> g.render(gc));
         NttGroup.wallList.forEach(g -> g.render(gc));
         NttGroup.itemsList.forEach(g -> g.render(gc));
-        NttGroup.enemyList.forEach(g -> g.render(gc));
         NttGroup.bombList.forEach(g -> g.render(gc));
         NttGroup.detonatorList.forEach(g -> g.render(gc));
         NttGroup.flames.forEach(g -> g.render(gc));
@@ -221,6 +260,7 @@ public class BombermanGame extends Application  {
         if(NttGroup.bombers != null){
             NttGroup.bombers.render(gc);
         }
+        NttGroup.enemyList.forEach(g -> g.render(gc));
     }
 
     public void scoreGet(Enemy temp) {
@@ -244,7 +284,6 @@ public class BombermanGame extends Application  {
         NttGroup.reset();
         MainMenu.showType = MainMenu.SHOW_END;
         MainMenu.showEnd = true;
-        MainMenu.playerLose = true;
         updateHighScore();
     }
 
@@ -285,4 +324,5 @@ public class BombermanGame extends Application  {
             throw new RuntimeException(e);
         }
     }
+
 }

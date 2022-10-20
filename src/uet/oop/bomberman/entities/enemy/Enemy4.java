@@ -10,32 +10,38 @@ public class Enemy4 extends Enemy {
     private int imgCondition;
     public Enemy4(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
-        this.setSpeed(1);
+        this.setSpeedX(1);
         chaseMode = false;
-        imgCondition = 2;
+        imgCondition = 4;
     }
     @Override
     public void update() {
         moveCounter = (moveCounter+1)%imgCondition;
-        checkChase();
+        if(!chaseMode || !NttGroup.bombers.isAlive) {
+            checkChase();
+        }
         if (isAlive() && moveCounter == 0 && !chaseMode) {
             if (this.getSpeedX() == 0) {
-                if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
+                if (this.y + this.getSpeedY() < Sprite.SCALED_SIZE
+                        || this.y + this.getSpeedY() > 11*Sprite.SCALED_SIZE) {
                     int tmp = this.getSpeedY();
                     this.setSpeedY(-1*tmp);
                 }
                 this.y += this.getSpeedY();
             } else {
-                if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
+                if (this.x + this.getSpeedX() < Sprite.SCALED_SIZE
+                        || this.x + this.getSpeedX() > 29*Sprite.SCALED_SIZE) {
                     int tmp = this.getSpeedX();
                     this.setSpeedX(-1*tmp);
                 }
                 this.x += this.getSpeedX();
             }
+            //System.out.println(this.x + " " + this.y);
         }
         if (isAlive() && moveCounter == 0 && chaseMode) {
             int tmp = this.getSpeed();
             if (NttGroup.bombers.getX() != this.x) {
+                this.setSpeedY(0);
                 if (NttGroup.bombers.getX() > this.x) {
                     this.setSpeedX(tmp);
                 }
@@ -44,7 +50,8 @@ public class Enemy4 extends Enemy {
                 }
                 this.x += this.getSpeedX();
             }
-            else if (NttGroup.bombers.getY() != this.y) {
+            if (NttGroup.bombers.getY() != this.y && NttGroup.bombers.getX() == this.x) {
+                this.setSpeedX(0);
                 if (NttGroup.bombers.getY() > this.y) {
                     this.setSpeedY(tmp);
                 }
@@ -76,6 +83,10 @@ public class Enemy4 extends Enemy {
     }
 
     public void checkChase() {
+        if (!NttGroup.bombers.isAlive) {
+            chaseMode = false;
+            return;
+        }
         int idX = this.x/Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
         int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
@@ -83,8 +94,7 @@ public class Enemy4 extends Enemy {
         if ((idX==playerX && Math.abs(idY-playerY)<=3)
                 || (idY==playerY && Math.abs(idX-playerX)<=3)) {
             chaseMode = true;
-            this.setSpeed(2);
-            imgCondition = 3;
+            imgCondition = 2;
         }
     }
 }

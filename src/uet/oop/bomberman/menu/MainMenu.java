@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.NttGroup;
 
 import java.time.Duration;
@@ -180,9 +181,11 @@ public class MainMenu {
                     if (isSoundOn) {
                         sounds.setText("SOUNDS: OFF");
                         isSoundOn = false;
+                        gameSound = false;
                     } else {
                         sounds.setText("SOUNDS: ON");
                         isSoundOn = true;
+                        gameSound = true;
                     }
                 }
 
@@ -234,6 +237,9 @@ public class MainMenu {
             }
         }
         if (prepare == null && showNext && showType == SHOW_SATGE) {
+            if(BombermanGame.gameSound) {
+                Sound.playSound("soundStart");
+            }
             prepare = new Prepare(menuRoot);
             menuRoot.getChildren().add(prepare.stage);
             prepare.startPre = LocalDateTime.now();
@@ -242,6 +248,9 @@ public class MainMenu {
             if (prepare.checkEnd()) {
                 menuRoot.getChildren().remove(prepare.prepareView);
                 menuRoot.getChildren().remove(prepare.stage);
+                if(pathFinder != null) {
+                    pathFinder.reset();
+                }
                 createMap(scene, "Level" + Integer.toString(level) +".txt");
                 prepare = null;
                 running = false;
@@ -270,6 +279,10 @@ public class MainMenu {
                 prepare = new Prepare(menuRoot);
                 if (playerLose) {
                     prepare.endGame.setText("YOU LOSE\n\n\n\nYour score\n");
+                }
+                else {
+                    prepare.endGame.setX(340);
+                    prepare.endGame.setText("CONGRATULATIONS\n\n\n\n\t Your score\n");
                 }
                 menuRoot.getChildren().add(prepare.endGame);
                 menuRoot.getChildren().add(prepare.point);

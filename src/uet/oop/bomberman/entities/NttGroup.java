@@ -1,17 +1,13 @@
 package uet.oop.bomberman.entities;
 
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.field.*;
 import uet.oop.bomberman.entities.enemy.Enemy;
-import uet.oop.bomberman.graphics.Sprite;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class NttGroup {
 
@@ -25,8 +21,6 @@ public class NttGroup {
     public static List<Flame> flames = new ArrayList<>();
     public static List<Items> itemsList = new ArrayList<>();
     public static List<Bomb> detonatorList = new ArrayList<>();
-    public static final int WIDTH = 31;
-    public static final int HEIGHT = 13;
     public static char[][] map = new char[100][100];
     public static char[][] origin = new char[100][100];
     public static LocalDateTime timePause;
@@ -47,6 +41,12 @@ public class NttGroup {
         }
         while (NttGroup.brickList.size()>0) {
             NttGroup.brickList.remove(0);
+        }
+        while (NttGroup.enemyList.size()>0) {
+            NttGroup.enemyList.remove(0);
+        }
+        while (NttGroup.detonatorList.size()>0) {
+            NttGroup.detonatorList.remove(0);
         }
         NttGroup.bombers = null;
         NttGroup.gamePortal = null;

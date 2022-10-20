@@ -1,10 +1,12 @@
 package uet.oop.bomberman.Player;
 
 import javafx.scene.Scene;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.menu.MainMenu;
+import uet.oop.bomberman.menu.Sound;
 
 import java.time.LocalDateTime;
 
@@ -23,10 +25,16 @@ public class PlayerController {
                         bomberman.goDown();
                     } else if (event.getCode().toString().equals("SPACE")&& bomberman.isAlive) {
                         if(bomberman.bombs.size()<bomberman.getNumBombs()) {
+                            if(BombermanGame.gameSound) {
+                                Sound.playSound("soundSet");
+                            }
                             bomberman.createBomb();
                         }
                     } else if (event.getCode().toString().equals("D")&& bomberman.isAlive) {
                         if (bomberman.getNumDetonator() > 0) {
+                            if(BombermanGame.gameSound) {
+                                Sound.playSound("soundSet");
+                            }
                             bomberman.createDetonator();
                         }
                     } else if (event.getCode().toString().equals("F")&& bomberman.isAlive) {

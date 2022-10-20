@@ -49,8 +49,7 @@ public class Prepare {
         instruct.setX(100);
         instruct.setY(100);
 
-        String res1 = "CONGRATULATIONS\n\n\n\nYour score\n";
-        endGame = new Text(res1);
+        endGame = new Text();
         endGame.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         endGame.setFill(Color.CRIMSON);
         endGame.setX(410);
@@ -74,7 +73,7 @@ public class Prepare {
     public boolean checkEnd() {
         LocalDateTime tmp = LocalDateTime.now();
         int time = (int) Duration.between(startPre, tmp).toMillis();
-        if(time >= 1000) {
+        if(time >= 2000) {
             return true;
         }
         return false;

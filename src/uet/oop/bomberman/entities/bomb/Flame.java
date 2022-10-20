@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.bomb;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.entities.field.Brick;
@@ -40,6 +41,7 @@ public class Flame extends Entity {
 
     public void removeBrick(int idX, int idY, int vt) {
         NttGroup.brickList.remove(vt);
+        BombermanGame.pathFinder.node[idX][idY].setSolid(false);
         NttGroup.map[idX][idY] = NttGroup.origin[idX][idY];
         switch (NttGroup.origin[idX][idY]) {
             case ' ':
@@ -70,8 +72,7 @@ public class Flame extends Entity {
                 NttGroup.itemsList.add(item);
                 break;
             case 'p':
-                Portal portal = new Portal(idX, idY, Sprite.portal.getFxImage());
-                NttGroup.gamePortal = portal;
+                NttGroup.gamePortal = new Portal(idX, idY, Sprite.portal.getFxImage());
         }
     }
 

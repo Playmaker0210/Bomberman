@@ -1,15 +1,14 @@
 package uet.oop.bomberman.entities.field;
 
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.menu.MainMenu;
+import uet.oop.bomberman.menu.Sound;
 
 import static uet.oop.bomberman.BombermanGame.*;
-import static uet.oop.bomberman.menu.MainMenu.menuRoot;
 
 public class Portal extends Entity {
     public Portal (int x, int y, Image img) {
@@ -19,7 +18,7 @@ public class Portal extends Entity {
     public void update() {
 
     }
-    public void changeLevel(Scene scene) {
+    public void changeLevel() {
         int idX = this.x/ Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
         int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
@@ -40,6 +39,9 @@ public class Portal extends Entity {
                 NttGroup.reset();
                 MainMenu.showType = MainMenu.SHOW_END;
                 MainMenu.showEnd = true;
+                if (gameSound) {
+                    Sound.playSound("soundWin");
+                }
             }
         }
     }
