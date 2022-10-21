@@ -33,7 +33,7 @@ Các *Item* cũng được giấu phía sau Brick và chỉ hiện ra khi Brick 
 Có nhiều loại Enemy trong Bomberman:
 - ![](res/sprites/balloom_left1.png) *Balloom* là Enemy đơn giản nhất, di chuyển theo quỹ đạo và tốc độ cố định
 - ![](res/sprites/oneal_left1.png) *Oneal* có tốc độ di chuyển thay đổi, lúc nhanh, lúc chậm và có thể đổi hướng di chuyển bất ngờ
-- ![](res/sprites/doll_lef1.png) *Doll* có thể đuổi theo người chơi
+- ![](res/sprites/doll_left1.png) *Doll* có thể đuổi theo người chơi
 - ![](res/sprites/kondoria_left1.png) *Kondoria* có thể đuổi theo người chơi như Doll, nhưng có khả năng đi xuyên chướng ngại vật
 
 ## Mô tả game play, xử lý va chạm và xử lý bom nổ
