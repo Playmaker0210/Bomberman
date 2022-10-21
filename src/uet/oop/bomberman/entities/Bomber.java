@@ -73,8 +73,8 @@ public class Bomber extends Entity {
             double vtX = (double) x/Sprite.SCALED_SIZE;
             double vtY = (double) y/Sprite.SCALED_SIZE;
             if((Math.abs(tmpX - vtX) >= 0.95 || Math.abs(tmpY - vtY) >= 0.95) &&
-                    !bombs.get(i).activate) {
-                bombs.get(i).activate=true;
+                    !bombs.get(i).isActivate()) {
+                bombs.get(i).setActivate(true);
             }
         }
     }
@@ -141,8 +141,8 @@ public class Bomber extends Entity {
 
     public void checkBomb() {
         for(int i=0;i<bombs.size();i++) {
-            bombs.get(i).timeStop= LocalDateTime.now();
-            int tmp = (int) Duration.between(bombs.get(i).timePut,bombs.get(i).timeStop).toMillis();
+            bombs.get(i).setTimeStop(LocalDateTime.now());
+            int tmp = (int) Duration.between(bombs.get(i).getTimePut(),bombs.get(i).getTimeStop()).toMillis();
             if((tmp-NttGroup.diffTime)%10==0)
             {
                 bombs.get(i).setImg(Sprite.movingSprite(Sprite.bomb,Sprite.bomb_1,
@@ -180,7 +180,7 @@ public class Bomber extends Entity {
         NttGroup.map[tmpX][tmpY] = 'b';
         BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
         bombs.add(bo);
-        bo.timePut= LocalDateTime.now();
+        bo.setTimePut(LocalDateTime.now()) ;
         NttGroup.bombList.add(bo);
     }
 

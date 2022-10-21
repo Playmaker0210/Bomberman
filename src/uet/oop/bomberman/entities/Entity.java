@@ -87,7 +87,7 @@ public abstract class Entity {
     public boolean checkBoundBomb() {
         for(Bomb bomb : NttGroup.bombList) {
             if(this instanceof Bomber) {
-                if(this.intersect(bomb)&&bomb.activate) {return true;}
+                if(this.intersect(bomb)&&bomb.isActivate()) {return true;}
             }
             else {
                 if(this.intersect(bomb)) {return true;}

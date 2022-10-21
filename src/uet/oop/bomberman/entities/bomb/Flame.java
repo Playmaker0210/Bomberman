@@ -18,10 +18,43 @@ import java.util.List;
 public class Flame extends Entity {
 
     private LocalDateTime timeStartFlame;
-    public boolean exploLeft;
-    public boolean exploRight;
-    public boolean exploUp;
-    public boolean exploDown;
+
+    public boolean isExploLeft() {
+        return exploLeft;
+    }
+
+    public void setExploLeft(boolean exploLeft) {
+        this.exploLeft = exploLeft;
+    }
+
+    public boolean isExploRight() {
+        return exploRight;
+    }
+
+    public void setExploRight(boolean exploRight) {
+        this.exploRight = exploRight;
+    }
+
+    public boolean isExploUp() {
+        return exploUp;
+    }
+
+    public void setExploUp(boolean exploUp) {
+        this.exploUp = exploUp;
+    }
+
+    public boolean isExploDown() {
+        return exploDown;
+    }
+
+    public void setExploDown(boolean exploDown) {
+        this.exploDown = exploDown;
+    }
+
+    private boolean exploLeft;
+    private boolean exploRight;
+    private boolean exploUp;
+    private boolean exploDown;
     private List<Brick> crackList = new ArrayList<>();
     private boolean[][] check = new boolean[100][100];
     private int imgCounter;
@@ -142,6 +175,9 @@ public class Flame extends Entity {
     }
 
     public boolean checkEndFlame() {
+        if (NttGroup.bombers == null) {
+            return false;
+        }
         LocalDateTime timeEndFlame = LocalDateTime.now();
         int tmp = (int) Duration.between(timeStartFlame, timeEndFlame).toMillis();
         imgCounter++;

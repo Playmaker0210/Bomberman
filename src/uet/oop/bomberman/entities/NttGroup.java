@@ -59,19 +59,19 @@ public class NttGroup {
             return true;
         }
         for (Bomb bomb : NttGroup.bombList) {
-            if (bomb.timeStartFlame != null) {
-                if (bomb.timeStartFlame.compareTo(NttGroup.timePause) < 0) {
+            if (bomb.getTimeStartFlame() != null) {
+                if (bomb.getTimeStartFlame().compareTo(NttGroup.timePause) < 0) {
                     return false;
                 }
             }
-            if (bomb.timePut != null) {
+            if (bomb.getTimePut() != null) {
                 //System.out.println(bomb.timePut.compareTo(NttGroup.timePause));
-                if (bomb.timePut.compareTo(NttGroup.timePause) < 0) {
+                if (bomb.getTimePut().compareTo(NttGroup.timePause) < 0) {
                     return false;
                 }
             }
-            if (bomb.timeStop != null) {
-                if (bomb.timeStop.compareTo(NttGroup.timePause) < 0) {
+            if (bomb.getTimeStop() != null) {
+                if (bomb.getTimeStop().compareTo(NttGroup.timePause) < 0) {
                     return false;
                 }
             }
