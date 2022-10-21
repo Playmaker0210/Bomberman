@@ -152,10 +152,11 @@ public class Bomber extends Entity {
                 if (BombermanGame.gameSound) {
                     Sound.playSound("soundBomb");
                 }
-                bombs.get(i).explosion(bombRadius);
-                NttGroup.bombList.remove(i);
                 int idX = bombs.get(i).getX()/Sprite.SCALED_SIZE;
                 int idY = bombs.get(i).getY()/Sprite.SCALED_SIZE;
+                BombermanGame.pathFinder.node[idX][idY].setSolid(false);
+                bombs.get(i).explosion(bombRadius);
+                NttGroup.bombList.remove(i);
                 NttGroup.map[idX][idY] = ' ';
                 bombs.remove(i);
                 i--;
@@ -164,6 +165,9 @@ public class Bomber extends Entity {
     }
 
     public void detonate() {
+        int idX = detonator.get(0).getX()/Sprite.SCALED_SIZE;
+        int idY = detonator.get(0).getY()/Sprite.SCALED_SIZE;
+        BombermanGame.pathFinder.node[idX][idY].setSolid(false);
         detonator.get(0).explosion(bombRadius);
         NttGroup.detonatorList.remove(0);
         detonator.remove(0);
@@ -174,6 +178,7 @@ public class Bomber extends Entity {
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
         NttGroup.map[tmpX][tmpY] = 'b';
+        BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
         bombs.add(bo);
         bo.timePut= LocalDateTime.now();
         NttGroup.bombList.add(bo);
@@ -185,6 +190,7 @@ public class Bomber extends Entity {
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
         NttGroup.map[tmpX][tmpY] = 'b';
+        BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
         detonator.add(bo);
         NttGroup.detonatorList.add(bo);
     }

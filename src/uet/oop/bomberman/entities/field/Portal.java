@@ -33,6 +33,7 @@ public class Portal extends Entity {
                 MainMenu.showType = MainMenu.SHOW_SATGE;
             }
             else {
+                playerScore += playerLife * 1500;
                 BombermanGame.makeEndGame();
                 MainMenu.running=true;
                 MainMenu.isStart = false;

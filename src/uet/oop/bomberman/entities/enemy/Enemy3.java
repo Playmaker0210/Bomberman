@@ -70,6 +70,7 @@ public class Enemy3 extends Enemy{
             return ;
         }
         if (!NttGroup.bombers.isAlive) {
+            chaseMode = false;
             return;
         }
         int idX = this.x/Sprite.SCALED_SIZE;
@@ -96,7 +97,7 @@ public class Enemy3 extends Enemy{
         int idY = this.y / Sprite.SCALED_SIZE;
         int playerX = NttGroup.bombers.getX() / Sprite.SCALED_SIZE;
         int playerY = NttGroup.bombers.getY() / Sprite.SCALED_SIZE;
-        if (idX == goalX && idY == goalY && NttGroup.bombers.isAlive && this.x%32 == 0 && this.y%32==0) {
+        if (currentIndex == -1) {
             BombermanGame.pathFinder.setNode(idX, idY, playerX, playerY);
             BombermanGame.pathFinder.search();
             currentIndex = BombermanGame.pathFinder.pathList.size()-1;
@@ -111,7 +112,14 @@ public class Enemy3 extends Enemy{
             }
         }
         if(moveCounter == 0 && currentIndex >= 0) {
-            makeMove(currentIndex);
+            int tmpX = BombermanGame.pathFinder.pathList.get(currentIndex).col;
+            int tmpY = BombermanGame.pathFinder.pathList.get(currentIndex).row;
+            if (BombermanGame.pathFinder.node[tmpX][tmpY].isSolid()) {
+                currentIndex = -1;
+            }
+            else {
+                makeMove(currentIndex);
+            }
         }
     }
 

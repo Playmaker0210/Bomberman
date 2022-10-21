@@ -227,7 +227,9 @@ public class BombermanGame extends Application  {
             }
             if ((NttGroup.bombers.checkBoundFlame() && !NttGroup.bombers.isFlamePass())
                     || NttGroup.bombers.checkBoundEnemy()) {
-                NttGroup.bombers.setDie();
+                if (NttGroup.bombers.isAlive) {
+                    NttGroup.bombers.setDie();
+                }
             }
             if (!NttGroup.bombers.isAlive) {
                 NttGroup.bombers.reset();
