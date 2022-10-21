@@ -180,14 +180,14 @@ public class Flame extends Entity {
         }
         LocalDateTime timeEndFlame = LocalDateTime.now();
         int tmp = (int) Duration.between(timeStartFlame, timeEndFlame).toMillis();
-        imgCounter++;
+        System.out.println(imgCounter);
         for (int i=0;i<crackList.size();i++) {
             int vt = crackList.get(i).originalPlace;
-            if(imgCounter==9) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded.getFxImage());
-            if(imgCounter==18) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded1.getFxImage());
-            if(imgCounter==27) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded2.getFxImage());
+            if(imgCounter==13) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded.getFxImage());
+            if(imgCounter==26) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded1.getFxImage());
+            if(imgCounter==39) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded2.getFxImage());
         }
-        if (tmp - NttGroup.diffTime >= 240) {
+        if (tmp - NttGroup.diffTime >= 500) {
             for(int i=0;i<crackList.size();i++) {
                 int vt = crackList.get(i).originalPlace-i;
                 int idX = crackList.get(i).getX() / Sprite.SCALED_SIZE;
