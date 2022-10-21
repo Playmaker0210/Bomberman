@@ -93,6 +93,15 @@ public abstract class Entity {
                 if(this.intersect(bomb)) {return true;}
             }
         }
+
+        for(Bomb bomb : NttGroup.detonatorList) {
+            if(this instanceof Bomber) {
+                if(this.intersect(bomb)&&bomb.isActivate()) {return true;}
+            }
+            else {
+                if(this.intersect(bomb)) {return true;}
+            }
+        }
         return false;
     }
 

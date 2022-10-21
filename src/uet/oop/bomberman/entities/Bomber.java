@@ -77,6 +77,17 @@ public class Bomber extends Entity {
                 bombs.get(i).setActivate(true);
             }
         }
+
+        for (int i=0;i<detonator.size();i++) {
+            double tmpX = (double) detonator.get(i).getX()/Sprite.SCALED_SIZE;
+            double tmpY = (double) detonator.get(i).getY()/Sprite.SCALED_SIZE;
+            double vtX = (double) x/Sprite.SCALED_SIZE;
+            double vtY = (double) y/Sprite.SCALED_SIZE;
+            if((Math.abs(tmpX - vtX) >= 0.95 || Math.abs(tmpY - vtY) >= 0.95) &&
+                    !detonator.get(i).isActivate()) {
+                detonator.get(i).setActivate(true);
+            }
+        }
     }
 
     public void goUp() {
