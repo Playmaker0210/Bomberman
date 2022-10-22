@@ -72,57 +72,70 @@ public class Flame extends Entity {
         return timeStartFlame;
     }
 
-    public void removeBrick(int idX, int idY, int vt) {
-        NttGroup.brickList.remove(vt);
+    /**
+     * xoa brick tai vi tri [idX, idY]
+     */
+    public void removeBrick(int idX, int idY, NttGroup levelManage) {
+        for (int i =0 ; i < levelManage.brickList.size(); i++) {
+            int posX = levelManage.brickList.get(i).getX() / Sprite.SCALED_SIZE;
+            int posY = levelManage.brickList.get(i).getY() / Sprite.SCALED_SIZE;
+            if (posY == idY && posX == idX) {
+                levelManage.brickList.remove(i);
+                break;
+            }
+        }
         BombermanGame.pathFinder.node[idX][idY].setSolid(false);
-        NttGroup.map[idX][idY] = NttGroup.origin[idX][idY];
-        switch (NttGroup.origin[idX][idY]) {
+        levelManage.map[idX][idY] = levelManage.origin[idX][idY];
+        switch (levelManage.origin[idX][idY]) {
             case ' ':
                 break;
             case '0':
                 Items item = new Items(idX, idY, Sprite.powerup_bombpass.getFxImage());
                 item.setType(Items.TYPE_BOMBPASS);
-                NttGroup.itemsList.add(item);
+                levelManage.itemsList.add(item);
                 break;
             case '1':
                 item = new Items(idX, idY, Sprite.powerup_bombs.getFxImage());
                 item.setType(Items.TYPE_BOMBS);
-                NttGroup.itemsList.add(item);
+                levelManage.itemsList.add(item);
                 break;
             case '2':
                 item = new Items(idX, idY, Sprite.powerup_detonator.getFxImage());
                 item.setType(Items.TYPE_DETONATOR);
-                NttGroup.itemsList.add(item);
+                levelManage.itemsList.add(item);
                 break;
             case '3':
                 item = new Items(idX, idY, Sprite.powerup_flamepass.getFxImage());
                 item.setType(Items.TYPE_FLAMEPASS);
-                NttGroup.itemsList.add(item);
+                levelManage.itemsList.add(item);
                 break;
             case '4':
                 item = new Items(idX, idY, Sprite.powerup_flames.getFxImage());
                 item.setType(Items.TYPE_FLAMES);
-                NttGroup.itemsList.add(item);
+                levelManage.itemsList.add(item);
                 break;
             case 'p':
-                NttGroup.gamePortal = new Portal(idX, idY, Sprite.portal.getFxImage());
+                levelManage.gamePortal = new Portal(idX, idY, Sprite.portal.getFxImage());
         }
     }
 
-    public void update() {
+    /**
+     * dua vi tri cac brick bi xoa vao 1 List.
+     */
+    public void update(NttGroup levelManage) {
         int flameX = x/Sprite.SCALED_SIZE;
         int flameY = y/Sprite.SCALED_SIZE;
-        for(int j=0;j<NttGroup.brickList.size();j++) {
-            int tmpX = NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE;
-            int tmpY = NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE;
+        for(int j=0;j<levelManage.brickList.size();j++) {
+            int tmpX = levelManage.brickList.get(j).getX()/Sprite.SCALED_SIZE;
+            int tmpY = levelManage.brickList.get(j).getY()/Sprite.SCALED_SIZE;
             if(tmpX==flameX-1&&tmpY==flameY&&exploLeft) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
-                    crackList.add(NttGroup.brickList.get(j));
-                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
-                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                    crackList.add(levelManage.brickList.get(j));
+                    Grass temp = new Grass(levelManage.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , levelManage.brickList.get(j).getY()/Sprite.SCALED_SIZE
                             , Sprite.grass.getFxImage());
-                    NttGroup.grassList.add(temp);
+                    levelManage.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -132,11 +145,11 @@ public class Flame extends Entity {
             if(tmpX==flameX+1&&tmpY==flameY&&exploRight) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
-                    crackList.add(NttGroup.brickList.get(j));
-                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
-                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                    crackList.add(levelManage.brickList.get(j));
+                    Grass temp = new Grass(levelManage.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , levelManage.brickList.get(j).getY()/Sprite.SCALED_SIZE
                             , Sprite.grass.getFxImage());
-                    NttGroup.grassList.add(temp);
+                    levelManage.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -146,11 +159,11 @@ public class Flame extends Entity {
             if(tmpX==flameX&&tmpY==flameY-1&&exploUp) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
-                    crackList.add(NttGroup.brickList.get(j));
-                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
-                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                    crackList.add(levelManage.brickList.get(j));
+                    Grass temp = new Grass(levelManage.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , levelManage.brickList.get(j).getY()/Sprite.SCALED_SIZE
                             , Sprite.grass.getFxImage());
-                    NttGroup.grassList.add(temp);
+                    levelManage.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -160,11 +173,11 @@ public class Flame extends Entity {
             if(tmpX==flameX&&tmpY==flameY+1&&exploDown) {
                 //removeBrick(tmpX, tmpY, j);
                 if(!check[tmpX][tmpY]) {
-                    crackList.add(NttGroup.brickList.get(j));
-                    Grass temp = new Grass(NttGroup.brickList.get(j).getX()/Sprite.SCALED_SIZE
-                            , NttGroup.brickList.get(j).getY()/Sprite.SCALED_SIZE
+                    crackList.add(levelManage.brickList.get(j));
+                    Grass temp = new Grass(levelManage.brickList.get(j).getX()/Sprite.SCALED_SIZE
+                            , levelManage.brickList.get(j).getY()/Sprite.SCALED_SIZE
                             , Sprite.grass.getFxImage());
-                    NttGroup.grassList.add(temp);
+                    levelManage.grassList.add(temp);
                     int tmp = crackList.size() - 1;
                     crackList.get(tmp).originalPlace = j;
                     check[tmpX][tmpY]=true;
@@ -174,25 +187,36 @@ public class Flame extends Entity {
         }
     }
 
-    public boolean checkEndFlame() {
-        if (NttGroup.bombers == null) {
+    /**
+     * thay doi hinh anh cua cac brick bi xoa va tao anh cho Flame
+     */
+    public boolean checkEndFlame(NttGroup levelManage) {
+        if (levelManage.bombers == null) {
             return false;
         }
         LocalDateTime timeEndFlame = LocalDateTime.now();
         int tmp = (int) Duration.between(timeStartFlame, timeEndFlame).toMillis();
-        System.out.println(imgCounter);
-        for (int i=0;i<crackList.size();i++) {
-            int vt = crackList.get(i).originalPlace;
-            if(imgCounter==13) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded.getFxImage());
-            if(imgCounter==26) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded1.getFxImage());
-            if(imgCounter==39) NttGroup.brickList.get(vt).setImg(Sprite.brick_exploded2.getFxImage());
+        imgCounter = tmp - levelManage.diffTime;
+        int j = 0;
+        for (int i=0;i<levelManage.brickList.size();i++) {
+            if (j < crackList.size()) {
+                int crackX = crackList.get(j).getX() / Sprite.SCALED_SIZE;
+                int crackY = crackList.get(j).getY() / Sprite.SCALED_SIZE;
+                int posX = levelManage.brickList.get(i).getX() / Sprite.SCALED_SIZE;
+                int posY = levelManage.brickList.get(i).getY() / Sprite.SCALED_SIZE;
+                if (crackX == posX && crackY == posY) {
+                    if (imgCounter >= 100) levelManage.brickList.get(i).setImg(Sprite.brick_exploded.getFxImage());
+                    if (imgCounter >= 200) levelManage.brickList.get(i).setImg(Sprite.brick_exploded1.getFxImage());
+                    if (imgCounter >= 300) levelManage.brickList.get(i).setImg(Sprite.brick_exploded2.getFxImage());
+                    j++;
+                }
+            }
         }
-        if (tmp - NttGroup.diffTime >= 500) {
+        if (imgCounter >= 400) {
             for(int i=0;i<crackList.size();i++) {
-                int vt = crackList.get(i).originalPlace-i;
                 int idX = crackList.get(i).getX() / Sprite.SCALED_SIZE;
                 int idY = crackList.get(i).getY() / Sprite.SCALED_SIZE;
-                removeBrick(idX, idY, vt);
+                removeBrick(idX, idY, levelManage);
             }
             return true;
         }

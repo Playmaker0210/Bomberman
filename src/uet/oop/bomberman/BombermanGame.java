@@ -8,7 +8,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
@@ -25,8 +24,7 @@ import java.time.LocalDateTime;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
-import static uet.oop.bomberman.menu.MainMenu.playerLose;
-import static uet.oop.bomberman.menu.MainMenu.running;
+import static uet.oop.bomberman.menu.MainMenu.*;
 
 public class BombermanGame extends Application  {
 
@@ -38,9 +36,9 @@ public class BombermanGame extends Application  {
     public static boolean gameSound = true;
     public static PathFinder pathFinder = new PathFinder();
     public static PriorityQueue<Integer> highscore = new PriorityQueue<>();
-
     private GraphicsContext gc;
     public static Canvas canvas;
+    public NttGroup levelManage;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -66,28 +64,32 @@ public class BombermanGame extends Application  {
         stage.setScene(scene);
         stage.setTitle("Bomberman");
         stage.show();
-
+        levelManage = new NttGroup();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                if (levelManage != null) {
+                    if (levelManage.makeMap) {
+                        createMap(scene, "Level" + Integer.toString(level) + ".txt");
+                    }
+                }
                 if (running) {
-                    MainMenu.MenuControl(scene);
-                    MainMenu.updateMenu(scene);
+                    MainMenu.MenuControl(scene, levelManage);
+                    MainMenu.updateMenu(levelManage);
                 }
                 else {
                     render();
-                    update();
-                }
-                if (NttGroup.bombers != null) {
+                    update(levelManage);
                     stage.setTitle("Bomberman     Score: " + Integer.toString(playerScore)
-                    + "     Left: " + Integer.toString(playerLife));
+                            + "     Left: " + Integer.toString(playerLife));
                 }
             }
         };
         timer.start();
     }
 
-    public static void createMap(Scene scene, String last) {
+    public void createMap(Scene scene, String last) {
+        levelManage = new NttGroup();
         pathFinder.instantiateNode();
         File url = new File("res/levels/" + last);
         // Đọc dữ liệu từ File với Scanner
@@ -108,38 +110,38 @@ public class BombermanGame extends Application  {
                 Entity object;
                 if (j == 0 || j == cot - 1 || i == 0 || i == hang - 1) {
                     object = new Wall(j, i, Sprite.wall.getFxImage());
-                    NttGroup.wallList.add((Wall) object);
-                    NttGroup.map[j][i] = '#';
-                    NttGroup.origin[j][i] = '#';
+                    levelManage.wallList.add((Wall) object);
+                    levelManage.map[j][i] = '#';
+                    levelManage.origin[j][i] = '#';
                 }
                 else {
                     char k = X.charAt(j);
                     if(k=='*') {
                         object = new Brick(j, i, Sprite.brick.getFxImage());
-                        NttGroup.brickList.add((Brick) object);
-                        NttGroup.map[j][i] = '*';
-                        NttGroup.origin[j][i] = ' ';
+                        levelManage.brickList.add((Brick) object);
+                        levelManage.map[j][i] = '*';
+                        levelManage.origin[j][i] = ' ';
                         pathFinder.node[j][i].setSolid(true);
                     }
                     else if(k=='#'){
                         object = new Wall(j,i,Sprite.wall.getFxImage());
-                        NttGroup.wallList.add((Wall) object);
-                        NttGroup.map[j][i] = '#';
-                        NttGroup.origin[j][i] = '#';
+                        levelManage.wallList.add((Wall) object);
+                        levelManage.map[j][i] = '#';
+                        levelManage.origin[j][i] = '#';
                         pathFinder.node[j][i].setSolid(true);
                     }
                     else if(k==' '){
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        NttGroup.grassList.add((Grass) object);
-                        NttGroup.map[j][i] = ' ';
-                        NttGroup.origin[j][i] = ' ';
+                        levelManage.grassList.add((Grass) object);
+                        levelManage.map[j][i] = ' ';
+                        levelManage.origin[j][i] = ' ';
                     }
                     else {
                         //System.out.println(k);
                         object = new Brick(j, i, Sprite.brick.getFxImage());
-                        NttGroup.brickList.add((Brick) object);
-                        NttGroup.map[j][i] = '*';
-                        NttGroup.origin[j][i] = k;
+                        levelManage.brickList.add((Brick) object);
+                        levelManage.map[j][i] = '*';
+                        levelManage.origin[j][i] = k;
                         pathFinder.node[j][i].setSolid(true);
                     }
                 }
@@ -158,7 +160,7 @@ public class BombermanGame extends Application  {
                 else {
                     enemy.setSpeedY(enemy.getSpeed());
                 }
-                NttGroup.enemyList.add(enemy);
+                levelManage.enemyList.add(enemy);
             }
             else {
                 int x = scanner.nextInt();
@@ -173,16 +175,16 @@ public class BombermanGame extends Application  {
                 else {
                     enemy = new Enemy4(x, y, Sprite.kondoria_right1.getFxImage());
                 }
-                NttGroup.enemyList.add(enemy);
+                levelManage.enemyList.add(enemy);
             }
         }
         scanner.close();
         Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        NttGroup.bombers = (Bomber) bomberman;
-        PlayerController.bomberController(scene, NttGroup.bombers);
+        levelManage.bombers = (Bomber) bomberman;
+        PlayerController.bomberController(scene, levelManage.bombers, levelManage);
     }
 
-    public void update() {
+    public void update(NttGroup levelManage) {
         if(playerLife == 0) {
             if (gameSound) {
                 Sound.playSound("soundLose");
@@ -191,78 +193,82 @@ public class BombermanGame extends Application  {
             makeEndGame();
             return;
         }
-        if (NttGroup.bombers != null && !running) {
-            if (NttGroup.resetDiff()) {
-                NttGroup.diffTime = 0;
+        if (levelManage.bombers != null && !running) {
+            if (levelManage.resetDiff()) {
+                levelManage.diffTime = 0;
             }
-            if (NttGroup.bombers.bombs.size() > 0) {
-                NttGroup.bombers.checkBomb();
+            if (levelManage.bombers.bombs.size() > 0) {
+                levelManage.bombers.checkBomb(levelManage);
             }
-            if (NttGroup.gamePortal != null) {
-                NttGroup.gamePortal.changeLevel();
+            if (levelManage.gamePortal != null) {
+                levelManage.gamePortal.changeLevel(levelManage);
             }
-            if (NttGroup.bombers == null) {
+            if (levelManage.bombers == null) {
                 return;
             }
-            for (int i = 0; i < NttGroup.itemsList.size(); i++) {
-                NttGroup.itemsList.get(i).checkPlayerGet(i);
+            for (int i = 0; i < levelManage.itemsList.size(); i++) {
+                levelManage.itemsList.get(i).checkPlayerGet(i, levelManage);
             }
-            if (NttGroup.bombers.isFlamePass() || NttGroup.bombers.isBombPass()) {
-                NttGroup.bombers.timeOutItem();
+            if (levelManage.bombers.isFlamePass() || levelManage.bombers.isBombPass()) {
+                levelManage.bombers.timeOutItem(levelManage);
             }
-            for (int i = 0; i < NttGroup.enemyList.size(); i++) {
-                if (NttGroup.enemyList.get(i).checkBoundFlame()
-                        && NttGroup.enemyList.get(i).isAlive()) {
-                    NttGroup.enemyList.get(i).setSpeed(0);
-                    NttGroup.enemyList.get(i).setAlive(false);
-                    NttGroup.enemyList.get(i).setCollisionStart(LocalDateTime.now());
-                    NttGroup.enemyList.get(i).setSpecificDead();
-                    scoreGet(NttGroup.enemyList.get(i));
+            for (int i = 0; i < levelManage.enemyList.size(); i++) {
+                if (levelManage.enemyList.get(i).checkBoundFlame(levelManage)
+                        && levelManage.enemyList.get(i).isAlive()) {
+                    levelManage.enemyList.get(i).setSpeed(0);
+                    levelManage.enemyList.get(i).setAlive(false);
+                    levelManage.enemyList.get(i).setCollisionStart(LocalDateTime.now());
+                    levelManage.enemyList.get(i).setSpecificDead();
+                    scoreGet(levelManage.enemyList.get(i));
                 }
-                if (!NttGroup.enemyList.get(i).isAlive()
-                        && NttGroup.enemyList.get(i).checkDisappear()) {
-                    NttGroup.enemyList.remove(i);
+                if (!levelManage.enemyList.get(i).isAlive()
+                        && levelManage.enemyList.get(i).checkDisappear(levelManage)) {
+                    levelManage.enemyList.remove(i);
                     i--;
                 }
             }
-            if ((NttGroup.bombers.checkBoundFlame() && !NttGroup.bombers.isFlamePass())
-                    || NttGroup.bombers.checkBoundEnemy()) {
-                if (NttGroup.bombers.isAlive) {
-                    NttGroup.bombers.setDie();
+            if ((levelManage.bombers.checkBoundFlame(levelManage) && !levelManage.bombers.isFlamePass())
+                    || levelManage.bombers.checkBoundEnemy(levelManage)) {
+                if (levelManage.bombers.isAlive) {
+                    levelManage.bombers.setDie();
                 }
             }
-            if (!NttGroup.bombers.isAlive) {
-                NttGroup.bombers.reset();
+            if (!levelManage.bombers.isAlive) {
+                levelManage.bombers.reset(levelManage);
             }
-            if (NttGroup.flames.size() > 0) {
-                NttGroup.flames.forEach(Flame::update);
-                for (int i = 0; i < NttGroup.flames.size(); i++) {
-                    if (NttGroup.flames.get(i).checkEndFlame()) {
-                        NttGroup.flames.remove(i);
+            if (levelManage.flames.size() > 0) {
+                for (int i = 0; i < levelManage.flames.size(); i++) {
+                    levelManage.flames.get(i).update(levelManage);
+                }
+                for (int i = 0; i < levelManage.flames.size(); i++) {
+                    if (levelManage.flames.get(i).checkEndFlame(levelManage)) {
+                        levelManage.flames.remove(i);
                         i--;
                     }
                 }
             }
         }
-        NttGroup.enemyList.forEach(Enemy::update);
+        for (int i = 0; i < levelManage.enemyList.size(); i++){
+            levelManage.enemyList.get(i).update(levelManage);
+        }
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        NttGroup.grassList.forEach(g -> g.render(gc));
-        NttGroup.brickList.forEach(g -> g.render(gc));
-        NttGroup.wallList.forEach(g -> g.render(gc));
-        NttGroup.itemsList.forEach(g -> g.render(gc));
-        NttGroup.bombList.forEach(g -> g.render(gc));
-        NttGroup.detonatorList.forEach(g -> g.render(gc));
-        NttGroup.flames.forEach(g -> g.render(gc));
-        if(NttGroup.gamePortal != null) {
-            NttGroup.gamePortal.render(gc);
+        levelManage.grassList.forEach(g -> g.render(gc));
+        levelManage.brickList.forEach(g -> g.render(gc));
+        levelManage.wallList.forEach(g -> g.render(gc));
+        levelManage.itemsList.forEach(g -> g.render(gc));
+        levelManage.bombList.forEach(g -> g.render(gc));
+        levelManage.detonatorList.forEach(g -> g.render(gc));
+        levelManage.flames.forEach(g -> g.render(gc));
+        if(levelManage.gamePortal != null) {
+            levelManage.gamePortal.render(gc);
         }
-        if(NttGroup.bombers != null){
-            NttGroup.bombers.render(gc);
+        if(levelManage.bombers != null){
+            levelManage.bombers.render(gc);
         }
-        NttGroup.enemyList.forEach(g -> g.render(gc));
+        levelManage.enemyList.forEach(g -> g.render(gc));
     }
 
     public void scoreGet(Enemy temp) {
@@ -280,10 +286,12 @@ public class BombermanGame extends Application  {
         }
     }
 
-    public static void makeEndGame() {
+    /**
+     * ket thuc tro choi
+     */
+    public void makeEndGame() {
         MainMenu.running=true;
         MainMenu.isStart = false;
-        NttGroup.reset();
         MainMenu.showType = MainMenu.SHOW_END;
         MainMenu.showEnd = true;
         updateHighScore();

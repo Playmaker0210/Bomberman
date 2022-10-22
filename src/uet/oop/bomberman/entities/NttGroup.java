@@ -9,101 +9,93 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * lop quan li cac doi tuong trong 1 man choi
+ */
 public class NttGroup {
 
-    public static List<Bomb> bombList = new ArrayList<>();
-    public static List<Wall> wallList = new ArrayList<>();
-    public static List<Grass> grassList = new ArrayList<>();
-    public static List<Enemy> enemyList = new ArrayList<>();
-    public static List<Brick> brickList = new ArrayList<>();
-    public static Bomber bombers ;
-    public static Portal gamePortal;
-    public static List<Flame> flames = new ArrayList<>();
-    public static List<Items> itemsList = new ArrayList<>();
-    public static List<Bomb> detonatorList = new ArrayList<>();
-    public static char[][] map = new char[100][100];
-    public static char[][] origin = new char[100][100];
-    public static LocalDateTime timePause;
-    public static int diffTime;
-
-    public static void reset() {
-        while (NttGroup.wallList.size()>0) {
-            NttGroup.wallList.remove(0);
-        }
-        while (NttGroup.itemsList.size()>0) {
-            NttGroup.itemsList.remove(0);
-        }
-        while (NttGroup.grassList.size()>0) {
-            NttGroup.grassList.remove(0);
-        }
-        while (NttGroup.bombList.size()>0) {
-            NttGroup.bombList.remove(0);
-        }
-        while (NttGroup.brickList.size()>0) {
-            NttGroup.brickList.remove(0);
-        }
-        while (NttGroup.enemyList.size()>0) {
-            NttGroup.enemyList.remove(0);
-        }
-        while (NttGroup.detonatorList.size()>0) {
-            NttGroup.detonatorList.remove(0);
-        }
-        NttGroup.bombers = null;
-        NttGroup.gamePortal = null;
+    public List<Bomb> bombList;
+    public List<Wall> wallList;
+    public List<Grass> grassList;
+    public List<Enemy> enemyList;
+    public List<Brick> brickList;
+    public Bomber bombers;
+    public Portal gamePortal;
+    public List<Flame> flames;
+    public List<Items> itemsList;
+    public List<Bomb> detonatorList;
+    public char[][] map;
+    public char[][] origin;
+    public LocalDateTime timePause;
+    public int diffTime;
+    public boolean makeMap;
+    public NttGroup() {
+        bombList = new ArrayList<>();
+        wallList = new ArrayList<>();
+        brickList = new ArrayList<>();
+        grassList = new ArrayList<>();
+        enemyList = new ArrayList<>();
+        flames = new ArrayList<>();
+        itemsList = new ArrayList<>();
+        detonatorList = new ArrayList<>();
+        map = new char[100][100];
+        origin = new char[100][100];
+        gamePortal = null;
         diffTime = 0;
-        timePause = null;
+        bombers = null;
+        makeMap = false;
     }
 
-    public static boolean resetDiff() {
+    public boolean resetDiff() {
         if (timePause == null) {
             return true;
         }
-        for (Bomb bomb : NttGroup.bombList) {
+        for (Bomb bomb : bombList) {
             if (bomb.getTimeStartFlame() != null) {
-                if (bomb.getTimeStartFlame().compareTo(NttGroup.timePause) < 0) {
+                if (bomb.getTimeStartFlame().compareTo(timePause) < 0) {
                     return false;
                 }
             }
             if (bomb.getTimePut() != null) {
                 //System.out.println(bomb.timePut.compareTo(NttGroup.timePause));
-                if (bomb.getTimePut().compareTo(NttGroup.timePause) < 0) {
+                if (bomb.getTimePut().compareTo(timePause) < 0) {
                     return false;
                 }
             }
             if (bomb.getTimeStop() != null) {
-                if (bomb.getTimeStop().compareTo(NttGroup.timePause) < 0) {
+                if (bomb.getTimeStop().compareTo(timePause) < 0) {
                     return false;
                 }
             }
         }
 
-        for (Enemy enemy : NttGroup.enemyList) {
+        for (Enemy enemy : enemyList) {
             if (enemy.getCollisionStart() != null) {
-                if (enemy.getCollisionStart().compareTo(NttGroup.timePause) < 0) {
+                if (enemy.getCollisionStart().compareTo(timePause) < 0) {
                     return false;
                 }
             }
         }
 
-        for (Flame flame : NttGroup.flames) {
+        for (Flame flame : flames) {
             if (flame.getTimeStartFlame() != null) {
-                if (flame.getTimeStartFlame().compareTo(NttGroup.timePause) < 0) {
+                if (flame.getTimeStartFlame().compareTo(timePause) < 0) {
                     return false;
                 }
             }
         }
-        if (NttGroup.bombers.getTimeDie() != null) {
-            if (NttGroup.bombers.getTimeDie().compareTo(NttGroup.timePause) < 0) {
+        if (bombers.getTimeDie() != null) {
+            if (bombers.getTimeDie().compareTo(timePause) < 0) {
                 return false;
             }
         }
-        if (NttGroup.bombers.getTimeGetBombPass() != null) {
-            if (NttGroup.bombers.getTimeGetBombPass().compareTo(NttGroup.timePause) < 0) {
+        if (bombers.getTimeGetBombPass() != null) {
+            if (bombers.getTimeGetBombPass().compareTo(timePause) < 0) {
                 return false;
             }
         }
-        if (NttGroup.bombers.getTimeGetFlamePass() != null) {
-            if (NttGroup.bombers.getTimeGetFlamePass().compareTo(NttGroup.timePause) < 0) {
+        if (bombers.getTimeGetFlamePass() != null) {
+            if (bombers.getTimeGetFlamePass().compareTo(timePause) < 0) {
                 return false;
             }
         }

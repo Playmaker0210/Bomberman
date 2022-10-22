@@ -15,10 +15,10 @@ public class Enemy4 extends Enemy {
         imgCondition = 4;
     }
     @Override
-    public void update() {
+    public void update(NttGroup levelManage) {
         moveCounter = (moveCounter+1)%imgCondition;
-        if(!chaseMode || !NttGroup.bombers.isAlive) {
-            checkChase();
+        if(!chaseMode || !levelManage.bombers.isAlive) {
+            checkChase(levelManage);
         }
         if (isAlive() && moveCounter == 0 && !chaseMode) {
             if (this.getSpeedX() == 0) {
@@ -40,9 +40,9 @@ public class Enemy4 extends Enemy {
         }
         if (isAlive() && moveCounter == 0 && chaseMode) {
             int tmp = this.getSpeed();
-            if (NttGroup.bombers.getX() != this.x) {
+            if (levelManage.bombers.getX() != this.x) {
                 this.setSpeedY(0);
-                if (NttGroup.bombers.getX() > this.x) {
+                if (levelManage.bombers.getX() > this.x) {
                     this.setSpeedX(tmp);
                 }
                 else {
@@ -50,9 +50,9 @@ public class Enemy4 extends Enemy {
                 }
                 this.x += this.getSpeedX();
             }
-            if (NttGroup.bombers.getY() != this.y && NttGroup.bombers.getX() == this.x) {
+            if (levelManage.bombers.getY() != this.y && levelManage.bombers.getX() == this.x) {
                 this.setSpeedX(0);
-                if (NttGroup.bombers.getY() > this.y) {
+                if (levelManage.bombers.getY() > this.y) {
                     this.setSpeedY(tmp);
                 }
                 else {
@@ -82,15 +82,15 @@ public class Enemy4 extends Enemy {
         setImg(Sprite.kondoria_dead.getFxImage());
     }
 
-    public void checkChase() {
-        if (!NttGroup.bombers.isAlive) {
+    public void checkChase(NttGroup levelManage) {
+        if (!levelManage.bombers.isAlive) {
             chaseMode = false;
             return;
         }
         int idX = this.x/Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
-        int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
-        int playerY = NttGroup.bombers.getY()/Sprite.SCALED_SIZE;
+        int playerX = levelManage.bombers.getX()/Sprite.SCALED_SIZE;
+        int playerY = levelManage.bombers.getY()/Sprite.SCALED_SIZE;
         if ((idX==playerX && Math.abs(idY-playerY)<=3)
                 || (idY==playerY && Math.abs(idX-playerX)<=3)) {
             chaseMode = true;

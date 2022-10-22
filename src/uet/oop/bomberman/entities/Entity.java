@@ -30,7 +30,6 @@ public abstract class Entity {
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
-    public abstract void update();
 
     public int getX() {
         return x;
@@ -70,22 +69,22 @@ public abstract class Entity {
         return other.getBoundary().intersects(this.getBoundary());
     }
 
-    public boolean checkBoundBrick() {
-        for(Brick brick : NttGroup.brickList) {
+    public boolean checkBoundBrick(NttGroup levelManage) {
+        for(Brick brick : levelManage.brickList) {
             if(this.intersect(brick)) {return true;}
         }
         return false;
     }
 
-    public boolean checkBoundWall() {
-        for(Wall wall : NttGroup.wallList) {
+    public boolean checkBoundWall(NttGroup levelManage) {
+        for(Wall wall : levelManage.wallList) {
             if(this.intersect(wall)) {return true;}
         }
         return false;
     }
 
-    public boolean checkBoundBomb() {
-        for(Bomb bomb : NttGroup.bombList) {
+    public boolean checkBoundBomb(NttGroup levelManage) {
+        for(Bomb bomb : levelManage.bombList) {
             if(this instanceof Bomber) {
                 if(this.intersect(bomb)&&bomb.isActivate()) {return true;}
             }
@@ -94,7 +93,7 @@ public abstract class Entity {
             }
         }
 
-        for(Bomb bomb : NttGroup.detonatorList) {
+        for(Bomb bomb : levelManage.detonatorList) {
             if(this instanceof Bomber) {
                 if(this.intersect(bomb)&&bomb.isActivate()) {return true;}
             }
@@ -105,15 +104,15 @@ public abstract class Entity {
         return false;
     }
 
-    public boolean checkBoundFlame() {
-        for(Flame flame : NttGroup.flames) {
+    public boolean checkBoundFlame(NttGroup levelManage) {
+        for(Flame flame : levelManage.flames) {
             if(this.intersect(flame)) {return true;}
         }
         return false;
     }
 
-    public boolean checkBoundEnemy() {
-        for(Enemy enemy : NttGroup.enemyList) {
+    public boolean checkBoundEnemy(NttGroup levelManage) {
+        for(Enemy enemy : levelManage.enemyList) {
             if(this.intersect(enemy)) {return true;}
         }
         return false;

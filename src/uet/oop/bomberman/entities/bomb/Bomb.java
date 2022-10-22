@@ -52,162 +52,161 @@ public class Bomb extends Entity {
         super(xUnit, yUnit, img);
     }
 
-    public void update() {
-
-    }
-
-    public void explosion(int bombRadius) {
+    /**
+     * kiem tra cac brick bi pha khi bom no
+     */
+    public void explosion(int bombRadius, NttGroup levelManage) {
         timeStartFlame = LocalDateTime.now();
         int indexX = x / Sprite.SCALED_SIZE;
         int indexY = y / Sprite.SCALED_SIZE;
         int id = 0;
         bombFlame[id] = new Flame(indexX, indexY,
                 Sprite.bomb_exploded1.getFxImage(), timeStartFlame);
-        int centerFlame = NttGroup.flames.size();
-        NttGroup.flames.add(bombFlame[id]);
+        int centerFlame = levelManage.flames.size();
+        levelManage.flames.add(bombFlame[id]);
         int lastPos;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
-            if(NttGroup.map[indexX][indexY-i]==' ') {
+            if(levelManage.map[indexX][indexY-i]==' ') {
                 id++;
                 bombFlame[id] = new Flame(indexX, indexY-i,
                         Sprite.explosion_vertical1.getFxImage(), timeStartFlame);
                 lastPos = indexY-i-1;
-                NttGroup.flames.add(bombFlame[id]);
+                levelManage.flames.add(bombFlame[id]);
             }
             else {
                 break;
             }
         }
-        if(lastPos==EXIT&&NttGroup.map[indexX][indexY-1]==' ') {
+        if(lastPos==EXIT&&levelManage.map[indexX][indexY-1]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX, indexY-1,
                     Sprite.explosion_vertical_top_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT&&NttGroup.map[indexX][lastPos]==' ') {
+        if(lastPos!=EXIT&&levelManage.map[indexX][lastPos]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX, lastPos,
                     Sprite.explosion_vertical_top_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
         int check = bombRadius;
         if(id<check) {
-            int tmp = NttGroup.flames.size();
+            int tmp = levelManage.flames.size();
             check = id;
             if (lastPos==EXIT) {
-                NttGroup.flames.get(centerFlame).setExploUp(true);
+                levelManage.flames.get(centerFlame).setExploUp(true);
             }
             else {
-                NttGroup.flames.get(tmp-1).setExploUp(true);
+                levelManage.flames.get(tmp-1).setExploUp(true);
             }
         }
         check += bombRadius;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
-            if(NttGroup.map[indexX][indexY+i]==' ') {
+            if(levelManage.map[indexX][indexY+i]==' ') {
                 id++;
                 bombFlame[id] = new Flame(indexX, indexY+i,
                         Sprite.explosion_vertical1.getFxImage(), timeStartFlame);
                 lastPos = indexY+i+1;
-                NttGroup.flames.add(bombFlame[id]);
+                levelManage.flames.add(bombFlame[id]);
             }
             else {
                 break;
             }
         }
-        if(lastPos==EXIT&&NttGroup.map[indexX][indexY+1]==' ') {
+        if(lastPos==EXIT&&levelManage.map[indexX][indexY+1]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX, indexY+1,
                     Sprite.explosion_vertical_down_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT&&NttGroup.map[indexX][lastPos]==' ') {
+        if(lastPos!=EXIT&&levelManage.map[indexX][lastPos]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX, lastPos,
                     Sprite.explosion_vertical_down_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
         if(id<check) {
-            int tmp = NttGroup.flames.size();
+            int tmp = levelManage.flames.size();
             check = id;
             if (lastPos==EXIT) {
-                NttGroup.flames.get(centerFlame).setExploDown(true);
+                levelManage.flames.get(centerFlame).setExploDown(true);
             }
             else {
-                NttGroup.flames.get(tmp-1).setExploDown(true);
+                levelManage.flames.get(tmp-1).setExploDown(true);
             }
         }
         check += bombRadius;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
-            if(NttGroup.map[indexX-i][indexY]==' ') {
+            if(levelManage.map[indexX-i][indexY]==' ') {
                 id++;
                 bombFlame[id] = new Flame(indexX-i, indexY,
                         Sprite.explosion_horizontal1.getFxImage(), timeStartFlame);
                 lastPos = indexX-i-1;
-                NttGroup.flames.add(bombFlame[id]);
+                levelManage.flames.add(bombFlame[id]);
             }
             else {
                 break;
             }
         }
-        if(lastPos==EXIT&&NttGroup.map[indexX-1][indexY]==' ') {
+        if(lastPos==EXIT&&levelManage.map[indexX-1][indexY]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX-1, indexY,
                     Sprite.explosion_horizontal_left_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT&&NttGroup.map[lastPos][indexY]==' ') {
+        if(lastPos!=EXIT&&levelManage.map[lastPos][indexY]==' ') {
             id++;
             bombFlame[id] = new Flame(lastPos, indexY,
                     Sprite.explosion_horizontal_left_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
         if(id<check) {
-            int tmp = NttGroup.flames.size();
+            int tmp = levelManage.flames.size();
             check = id;
             if (lastPos==EXIT) {
-                NttGroup.flames.get(centerFlame).setExploLeft(true);
+                levelManage.flames.get(centerFlame).setExploLeft(true);
             }
             else {
-                NttGroup.flames.get(tmp-1).setExploLeft(true);
+                levelManage.flames.get(tmp-1).setExploLeft(true);
             }
         }
         check += bombRadius;
         lastPos = EXIT;
         for (int i=1;i<bombRadius;i++) {
-            if(NttGroup.map[indexX+i][indexY]==' ') {
+            if(levelManage.map[indexX+i][indexY]==' ') {
                 id++;
                 bombFlame[id] = new Flame(indexX+i, indexY,
                         Sprite.explosion_horizontal1.getFxImage(), timeStartFlame);
                 lastPos = indexX+i+1;
-                NttGroup.flames.add(bombFlame[id]);
+                levelManage.flames.add(bombFlame[id]);
             }
             else
             {
                 break;
             }
         }
-        if(lastPos==EXIT&&NttGroup.map[indexX+1][indexY]==' ') {
+        if(lastPos==EXIT&&levelManage.map[indexX+1][indexY]==' ') {
             id++;
             bombFlame[id] = new Flame(indexX+1, indexY,
                     Sprite.explosion_horizontal_right_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
-        if(lastPos!=EXIT&&NttGroup.map[lastPos][indexY]==' ') {
+        if(lastPos!=EXIT&&levelManage.map[lastPos][indexY]==' ') {
             id++;
             bombFlame[id] = new Flame(lastPos, indexY,
                     Sprite.explosion_horizontal_right_last1.getFxImage(), timeStartFlame);
-            NttGroup.flames.add(bombFlame[id]);
+            levelManage.flames.add(bombFlame[id]);
         }
         if(id<check) {
-            int tmp = NttGroup.flames.size();
+            int tmp = levelManage.flames.size();
             if (lastPos==EXIT) {
-                NttGroup.flames.get(centerFlame).setExploRight(true);
+                levelManage.flames.get(centerFlame).setExploRight(true);
             }
             else {
-                NttGroup.flames.get(tmp-1).setExploRight(true);
+                levelManage.flames.get(tmp-1).setExploRight(true);
             }
         }
     }

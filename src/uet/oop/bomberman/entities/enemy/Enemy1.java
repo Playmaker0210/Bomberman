@@ -1,5 +1,6 @@
 package uet.oop.bomberman.entities.enemy;
 
+import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
 import javafx.scene.image.Image;
 
@@ -10,17 +11,17 @@ public class Enemy1 extends Enemy {
         this.setSpeed(1);
     }
     @Override
-    public void update() {
+    public void update(NttGroup levelManage) {
         moveCounter = (moveCounter+1)%2;
         if (isAlive() && moveCounter == 0) {
             if (this.getSpeedX() == 0) {
-                if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
+                if (checkBoundWall(levelManage) || checkBoundBomb(levelManage) || checkBoundBrick(levelManage)) {
                     int tmp = this.getSpeedY();
                     this.setSpeedY(-1*tmp);
                 }
                 this.y += this.getSpeedY();
             } else {
-                if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
+                if (checkBoundBrick(levelManage) || checkBoundBomb(levelManage) || checkBoundWall(levelManage)) {
                     int tmp = this.getSpeedX();
                     this.setSpeedX(-1*tmp);
                 }

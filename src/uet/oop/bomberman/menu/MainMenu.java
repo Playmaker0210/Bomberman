@@ -14,6 +14,7 @@ import uet.oop.bomberman.entities.NttGroup;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Stack;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
@@ -27,20 +28,21 @@ public class MainMenu {
     public static boolean running;
     public static boolean isStart;
     public static boolean showNext;
-    private static boolean isSoundOn;
-    private static boolean showTutorial;
-    private static boolean showHigh;
+    public static boolean isSoundOn;
+    public static boolean showTutorial;
+    public static boolean showHigh;
     public static boolean showEnd;
     public static boolean playerLose;
     public static ImageView authorView;
-    private static Prepare prepare;
+    public static Prepare prepare;
     public static Group menuRoot;
     public static final int SHOW_SATGE = 0;
     public static final int SHOW_TUTORIAL = 1;
     public static final int SHOW_HIGH = 2;
     public static final int SHOW_END = 3;
+    public static final int PAUSE = 4;
     public static int showType;
-
+    public static Stack<Integer> showList = new Stack<>();
 
     public static void createMenu(Group root) {
         running = true;
@@ -104,7 +106,7 @@ public class MainMenu {
         backButton.setY(350);
     }
 
-    public static void MenuControl(Scene scene) {
+    public static void MenuControl(Scene scene, NttGroup levelManage) {
         scene.setOnMouseMoved(event -> {
             //System.out.println(event.getX() + " " + event.getY());
             if (!showTutorial && !showEnd && !showHigh) {
@@ -161,12 +163,14 @@ public class MainMenu {
                 if (event.getX() - startGame.getX() <= 95 && event.getX() >= startGame.getX()
                         && startGame.getY() - event.getY() <= 28 && event.getY() <= startGame.getY()) {
                     isStart = true;
-                    if(NttGroup.bombers == null) {
-                        showNext = true;
-                        showType = SHOW_SATGE;
-                    }
-                    else {
-                        NttGroup.diffTime = (int) Duration.between(NttGroup.timePause, LocalDateTime.now()).toMillis();
+                    if (levelManage != null) {
+                        if (levelManage.bombers == null) {
+                            showNext = true;
+                            showType = SHOW_SATGE;
+                            showList.push(SHOW_SATGE);
+                        } else {
+                            levelManage.diffTime = (int) Duration.between(levelManage.timePause, LocalDateTime.now()).toMillis();
+                        }
                     }
                 }
 
@@ -174,6 +178,7 @@ public class MainMenu {
                         && tutorial.getY() - event.getY() <= 28 && event.getY() <= tutorial.getY()) {
                     showTutorial = true;
                     showType = SHOW_TUTORIAL;
+                    showList.push(SHOW_TUTORIAL);
                 }
 
                 if (event.getX() - sounds.getX() <= 178 && event.getX() >= sounds.getX()
@@ -214,16 +219,18 @@ public class MainMenu {
                     && highScore.getY() - event.getY() <= 28 && event.getY() <= highScore.getY()) {
                 showType = SHOW_HIGH;
                 showHigh = true;
+                showList.push(SHOW_HIGH);
             }
         });
     }
 
-    public static void updateMenu(Scene scene) {
-        if (NttGroup.bombers != null) {
-            startGame.setText("RESUME");
-        }
-        else {
-            startGame.setText("START");
+    public static void updateMenu(NttGroup levelManage) {
+        if (levelManage != null) {
+            if (levelManage.bombers != null) {
+                startGame.setText("RESUME");
+            } else {
+                startGame.setText("START");
+            }
         }
         if(isStart) {
             menuRoot.getChildren().remove(authorView);
@@ -232,8 +239,12 @@ public class MainMenu {
             menuRoot.getChildren().remove(exitGame);
             menuRoot.getChildren().remove(sounds);
             menuRoot.getChildren().remove(tutorial);
-            if(NttGroup.bombers != null) {
-                running = false;
+            if (showList.size() > 0) {
+                if (showList.peek() == PAUSE) {
+                    running = false;
+                    showList.pop();
+                    showType = -1;
+                }
             }
         }
         if (prepare == null && showNext && showType == SHOW_SATGE) {
@@ -243,6 +254,9 @@ public class MainMenu {
             prepare = new Prepare(menuRoot);
             menuRoot.getChildren().add(prepare.stage);
             prepare.startPre = LocalDateTime.now();
+            if(!levelManage.makeMap) {
+                levelManage.makeMap = true;
+            }
         }
         else if (prepare != null && showNext && showType == SHOW_SATGE) {
             if (prepare.checkEnd()) {
@@ -251,9 +265,8 @@ public class MainMenu {
                 if(pathFinder != null) {
                     pathFinder.reset();
                 }
-                createMap(scene, "Level" + Integer.toString(level) +".txt");
-                prepare = null;
                 running = false;
+                prepare = null;
                 showNext = false;
                 showType = -1;
             }
@@ -272,6 +285,9 @@ public class MainMenu {
                 menuRoot.getChildren().remove(prepare.instruct);
                 prepare = null;
                 showType = -1;
+                if(showList.size() > 0) {
+                    showList.pop();
+                }
             }
         }
         if (showType == SHOW_END) {
@@ -324,6 +340,9 @@ public class MainMenu {
                     }
                     prepare = null;
                     showType = -1;
+                    if(showList.size() > 0) {
+                        showList.pop();
+                    }
                 }
             }
         }

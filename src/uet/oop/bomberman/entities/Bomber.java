@@ -33,12 +33,6 @@ public class Bomber extends Entity {
         super(x, y, img);
     }
 
-
-    @Override
-    public void update() {
-
-    }
-
     public int getNumBombs() {
         return numBombs;
     }
@@ -66,6 +60,9 @@ public class Bomber extends Entity {
         return timeDie;
     }
 
+    /**
+     * kiem tra xem da di ra khoi bomb chua
+     */
     public void activeBomb() {
         for (int i=0;i<bombs.size();i++) {
             double tmpX = (double) bombs.get(i).getX()/Sprite.SCALED_SIZE;
@@ -90,10 +87,10 @@ public class Bomber extends Entity {
         }
     }
 
-    public void goUp() {
+    public void goUp(NttGroup levelManage) {
         for (int i = 1; i <= this.speed; i++) {
             this.y -= 1;
-            if((checkBoundBomb() && !bombPass) || checkBoundBrick() || checkBoundWall()) {
+            if((checkBoundBomb(levelManage) && !bombPass) || checkBoundBrick(levelManage) || checkBoundWall(levelManage)) {
                 this.y+=1;
                 break;
             }
@@ -105,10 +102,10 @@ public class Bomber extends Entity {
         activeBomb();
     }
 
-    public void goDown() {
+    public void goDown(NttGroup levelManage) {
         for (int i = 1; i <= this.speed; i++) {
             this.y += 1;
-            if ((checkBoundBomb() && !bombPass) || checkBoundBrick() || checkBoundWall()) {
+            if ((checkBoundBomb(levelManage) && !bombPass) || checkBoundBrick(levelManage) || checkBoundWall(levelManage)) {
                 this.y -= 1;
                 break;
             }
@@ -120,10 +117,10 @@ public class Bomber extends Entity {
         activeBomb();
     }
 
-    public void goRight() {
+    public void goRight(NttGroup levelManage) {
         for (int i = 1; i <= this.speed; i++) {
             this.x += 1;
-            if((checkBoundBomb() && !bombPass) || checkBoundBrick() || checkBoundWall()) {
+            if((checkBoundBomb(levelManage) && !bombPass) || checkBoundBrick(levelManage) || checkBoundWall(levelManage)) {
                 this.x-=1;
                 break;
             }
@@ -135,10 +132,10 @@ public class Bomber extends Entity {
         activeBomb();
     }
 
-    public void goLeft() {
+    public void goLeft(NttGroup levelManage) {
         for (int i = 1; i <= this.speed; i++) {
             this.x -= 1;
-            if((checkBoundBomb() && !bombPass) || checkBoundBrick() || checkBoundWall()) {
+            if((checkBoundBomb(levelManage) && !bombPass) || checkBoundBrick(levelManage) || checkBoundWall(levelManage)) {
                 this.x+=1;
                 break;
             }
@@ -150,60 +147,63 @@ public class Bomber extends Entity {
         activeBomb();
     }
 
-    public void checkBomb() {
+    /**
+     * kiem tra bom no
+     */
+    public void checkBomb(NttGroup levelManage) {
         for(int i=0;i<bombs.size();i++) {
             bombs.get(i).setTimeStop(LocalDateTime.now());
             int tmp = (int) Duration.between(bombs.get(i).getTimePut(),bombs.get(i).getTimeStop()).toMillis();
-            if((tmp-NttGroup.diffTime)%10==0)
+            if((tmp-levelManage.diffTime)%10==0)
             {
                 bombs.get(i).setImg(Sprite.movingSprite(Sprite.bomb,Sprite.bomb_1,
                         Sprite.bomb_2,tmp/10,76).getFxImage());
             }
-            if(tmp-NttGroup.diffTime>=2000) {
+            if(tmp-levelManage.diffTime>=2000) {
                 if (BombermanGame.gameSound) {
                     Sound.playSound("soundBomb");
                 }
                 int idX = bombs.get(i).getX()/Sprite.SCALED_SIZE;
                 int idY = bombs.get(i).getY()/Sprite.SCALED_SIZE;
                 BombermanGame.pathFinder.node[idX][idY].setSolid(false);
-                bombs.get(i).explosion(bombRadius);
-                NttGroup.bombList.remove(i);
-                NttGroup.map[idX][idY] = ' ';
+                bombs.get(i).explosion(bombRadius, levelManage);
+                levelManage.bombList.remove(i);
+                levelManage.map[idX][idY] = ' ';
                 bombs.remove(i);
                 i--;
             }
         }
     }
 
-    public void detonate() {
+    public void detonate(NttGroup levelManage) {
         int idX = detonator.get(0).getX()/Sprite.SCALED_SIZE;
         int idY = detonator.get(0).getY()/Sprite.SCALED_SIZE;
         BombermanGame.pathFinder.node[idX][idY].setSolid(false);
-        detonator.get(0).explosion(bombRadius);
-        NttGroup.detonatorList.remove(0);
+        detonator.get(0).explosion(bombRadius, levelManage);
+        levelManage.detonatorList.remove(0);
         detonator.remove(0);
     }
 
-    public void createBomb() {
+    public void createBomb(NttGroup levelManage) {
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
-        NttGroup.map[tmpX][tmpY] = 'b';
+        levelManage.map[tmpX][tmpY] = 'b';
         BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
         bombs.add(bo);
         bo.setTimePut(LocalDateTime.now()) ;
-        NttGroup.bombList.add(bo);
+        levelManage.bombList.add(bo);
     }
 
-    public void createDetonator() {
+    public void createDetonator(NttGroup levelManage) {
         numDetonator--;
         int tmpX = this.x / Sprite.SCALED_SIZE;
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
-        NttGroup.map[tmpX][tmpY] = 'b';
+        levelManage.map[tmpX][tmpY] = 'b';
         BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
         detonator.add(bo);
-        NttGroup.detonatorList.add(bo);
+        levelManage.detonatorList.add(bo);
     }
 
     public void getItem(int type) {
@@ -228,15 +228,18 @@ public class Bomber extends Entity {
         }
     }
 
-    public void timeOutItem() {
+    /**
+     * thoi gian het item
+     */
+    public void timeOutItem(NttGroup levelManage) {
         LocalDateTime checkTime = LocalDateTime.now();
         if (flamePass) {
-            if (Duration.between(timeGetFlamePass,checkTime).toSeconds() >= 20 + NttGroup.diffTime/1000) {
+            if (Duration.between(timeGetFlamePass,checkTime).toSeconds() >= 20 + levelManage.diffTime/1000) {
                 flamePass = false;
             }
         }
         if (bombPass) {
-            if(Duration.between(timeGetBombPass,checkTime).toSeconds() >= 20 + NttGroup.diffTime/1000) {
+            if(Duration.between(timeGetBombPass,checkTime).toSeconds() >= 20 + levelManage.diffTime/1000) {
                 bombPass = false;
             }
         }
@@ -247,7 +250,10 @@ public class Bomber extends Entity {
         timeDie = LocalDateTime.now();
     }
 
-    public void reset() {
+    /**
+     * thay doi sprite cua Bomber khi bi chet
+     */
+    public void reset(NttGroup levelManage) {
         LocalDateTime checkTime = LocalDateTime.now();
         int tmp = (int) Duration.between(timeDie, checkTime).toMillis();
         imgCounter++;
@@ -258,7 +264,7 @@ public class Bomber extends Entity {
         if (imgCounter==75) setImg(Sprite.player_dead2.getFxImage());
         if (imgCounter==150) setImg(Sprite.player_dead3.getFxImage());
         if (imgCounter==200) setImg(Sprite.grass.getFxImage());
-        if(tmp - NttGroup.diffTime>=1500) {
+        if(tmp - levelManage.diffTime>=1500) {
             BombermanGame.playerLife--;
             if (BombermanGame.playerLife > 0) {
                 this.x = 32;
@@ -266,7 +272,6 @@ public class Bomber extends Entity {
                 isAlive = true;
                 imgCounter = 0;
                 setImg(Sprite.player_down.getFxImage());
-                NttGroup.reset();
                 MainMenu.running = true;
                 MainMenu.showNext = true;
                 MainMenu.showType = MainMenu.SHOW_SATGE;

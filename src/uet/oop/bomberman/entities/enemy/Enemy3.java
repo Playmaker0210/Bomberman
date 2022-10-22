@@ -6,6 +6,14 @@ import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Enemy3 extends Enemy{
+    public boolean isChaseMode() {
+        return chaseMode;
+    }
+
+    public void setChaseMode(boolean chaseMode) {
+        this.chaseMode = chaseMode;
+    }
+
     private boolean chaseMode;
     private int currentIndex;
     private int goalX;
@@ -18,24 +26,24 @@ public class Enemy3 extends Enemy{
         chaseMode = false;
     }
     @Override
-    public void update() {
+    public void update(NttGroup levelManage) {
         moveCounter = (moveCounter+1)%2;
-        if(!chaseMode) {
-            checkChase();
+        if (!chaseMode) {
+            checkChase(levelManage);
         }
         if (chaseMode) {
-            makeChase();
+            makeChase(levelManage);
         }
-        else {
+        if(!chaseMode) {
             if (isAlive() && moveCounter == 0) {
                 if (this.getSpeedX() == 0) {
-                    if (checkBoundWall() || checkBoundBomb() || checkBoundBrick()) {
+                    if (checkBoundWall(levelManage) || checkBoundBomb(levelManage) || checkBoundBrick(levelManage)) {
                         int tmp = this.getSpeedY();
                         this.setSpeedY(-1 * tmp);
                     }
                     this.y += this.getSpeedY();
                 } else {
-                    if (checkBoundBrick() || checkBoundBomb() || checkBoundWall()) {
+                    if (checkBoundBrick(levelManage) || checkBoundBomb(levelManage) || checkBoundWall(levelManage)) {
                         int tmp = this.getSpeedX();
                         this.setSpeedX(-1 * tmp);
                     }
@@ -64,19 +72,22 @@ public class Enemy3 extends Enemy{
         setImg(Sprite.doll_dead.getFxImage());
     }
 
-    public void checkChase() {
+    /**
+     * kiem tra neu Bomber o gan thi tien hanh duoi theo
+     */
+    public void checkChase(NttGroup levelManage) {
         if (this.x%Sprite.SCALED_SIZE!=0
         ||this.y%Sprite.SCALED_SIZE!=0) {
             return ;
         }
-        if (!NttGroup.bombers.isAlive) {
+        if (!levelManage.bombers.isAlive) {
             chaseMode = false;
             return;
         }
         int idX = this.x/Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
-        int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
-        int playerY = NttGroup.bombers.getY()/Sprite.SCALED_SIZE;
+        int playerX = levelManage.bombers.getX()/Sprite.SCALED_SIZE;
+        int playerY = levelManage.bombers.getY()/Sprite.SCALED_SIZE;
         if ((idX==playerX && Math.abs(idY-playerY)<=3)
         || (idY==playerY && Math.abs(idX-playerX)<=3)) {
             chaseMode = true;
@@ -88,15 +99,18 @@ public class Enemy3 extends Enemy{
         }
     }
 
-    public void makeChase() {
-        if (!NttGroup.bombers.isAlive) {
+    /**
+     * thuc hien duoi theo Bomber nhu duong di da tim, neu di het quang duong hay dang di ma gap bomb thi tim duong di moi
+     */
+    public void makeChase(NttGroup levelManage) {
+        if (!levelManage.bombers.isAlive) {
             chaseMode = false;
             return;
         }
         int idX = this.x / Sprite.SCALED_SIZE;
         int idY = this.y / Sprite.SCALED_SIZE;
-        int playerX = NttGroup.bombers.getX() / Sprite.SCALED_SIZE;
-        int playerY = NttGroup.bombers.getY() / Sprite.SCALED_SIZE;
+        int playerX = levelManage.bombers.getX() / Sprite.SCALED_SIZE;
+        int playerY = levelManage.bombers.getY() / Sprite.SCALED_SIZE;
         if (currentIndex == -1) {
             BombermanGame.pathFinder.setNode(idX, idY, playerX, playerY);
             BombermanGame.pathFinder.search();

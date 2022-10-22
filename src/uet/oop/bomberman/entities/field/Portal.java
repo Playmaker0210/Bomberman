@@ -1,7 +1,6 @@
 package uet.oop.bomberman.entities.field;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
@@ -15,29 +14,24 @@ public class Portal extends Entity {
         super(x, y, img);
     }
 
-    public void update() {
-
-    }
-    public void changeLevel() {
+    public void changeLevel(NttGroup levelManage) {
         int idX = this.x/ Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
-        int playerX = NttGroup.bombers.getX()/Sprite.SCALED_SIZE;
-        int playerY = NttGroup.bombers.getY()/Sprite.SCALED_SIZE;
-        if (idX == playerX && idY == playerY && NttGroup.enemyList.size() == 0) {
+        int playerX = levelManage.bombers.getX()/Sprite.SCALED_SIZE;
+        int playerY = levelManage.bombers.getY()/Sprite.SCALED_SIZE;
+        if (idX == playerX && idY == playerY && levelManage.enemyList.size() == 0) {
             playerScore += (level*200);
             if (level < 3) {
                 level++;
-                NttGroup.reset();
                 MainMenu.running = true;
                 MainMenu.showNext = true;
                 MainMenu.showType = MainMenu.SHOW_SATGE;
             }
             else {
                 playerScore += playerLife * 1500;
-                BombermanGame.makeEndGame();
+                makeEndGame();
                 MainMenu.running=true;
                 MainMenu.isStart = false;
-                NttGroup.reset();
                 MainMenu.showType = MainMenu.SHOW_END;
                 MainMenu.showEnd = true;
                 if (gameSound) {
@@ -45,5 +39,13 @@ public class Portal extends Entity {
                 }
             }
         }
+    }
+
+    public void makeEndGame() {
+        MainMenu.running=true;
+        MainMenu.isStart = false;
+        MainMenu.showType = MainMenu.SHOW_END;
+        MainMenu.showEnd = true;
+        updateHighScore();
     }
 }

@@ -6,6 +6,9 @@ import uet.oop.bomberman.entities.NttGroup;
 
 import java.util.ArrayList;
 
+/**
+ * thuat toan tim duong duoc cai tien tu DFS, them phan so sanh trong so duong di de tim duong di toi uu
+ */
 public class PathFinder {
     public Node[][] node;
     public ArrayList<Node> openList = new ArrayList<>();
@@ -20,6 +23,9 @@ public class PathFinder {
         instantiateNode();
     }
 
+    /**
+     * khoi tao
+     */
     public void instantiateNode() {
         node = new Node[BombermanGame.WIDTH][BombermanGame.HEIGHT];
         int col = 1;
@@ -55,6 +61,9 @@ public class PathFinder {
         step = 0;
     }
 
+    /**
+     * dat ra toa do diem den va toa do dich den
+     */
     public void setNode(int startCol, int startRow, int endCol, int endRow) {
         // lam moi
         openList.clear();
@@ -90,21 +99,27 @@ public class PathFinder {
         }
     }
 
+    /**
+     * lay trong so
+     */
     public void getCost(Node node) {
-        // gCost
+        // gCost la vi tri diem dang xet den diem xuat phat
         int distX = Math.abs(node.col - startNode.col);
         int distY = Math.abs(node.row - startNode.row);
         node.setgCost(distY + distX);
 
-        //hCost
+        //hCost la vi tri diem dang xet den dich
         distX = Math.abs(node.col - endNode.col);
         distY = Math.abs(node.row - endNode.row);
         node.sethCost(distX + distY);
 
-        //fCost;
+        //fCost la tong quang duong tu diem xuat phat den dich neu di qua diem dang xet
         node.setfCost(node.gethCost() + node.getgCost());
     }
 
+    /**
+     * tim kiem cac diem co the den va tao ra duong di tot nhat
+     */
     public boolean search() {
         while (!isEnd && step < 500) {
             int col = currentNode.col;
@@ -169,6 +184,9 @@ public class PathFinder {
         }
     }
 
+    /**
+     * truy van lai duong di de cho cac Entity co the su dung
+     */
     public void pathTrace() {
         Node current = endNode;
         while (current != startNode) {

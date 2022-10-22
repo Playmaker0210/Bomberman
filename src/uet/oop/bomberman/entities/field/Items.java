@@ -23,23 +23,18 @@ public class Items extends Entity {
         this.type = type;
     }
 
-
-    public void update() {
-
-    }
-
-    public void checkPlayerGet(int index) {
+    public void checkPlayerGet(int index, NttGroup levelManage) {
         int idX = this.x/ Sprite.SCALED_SIZE;
         int idY = this.y/Sprite.SCALED_SIZE;
-        if (this.intersect(NttGroup.bombers)) {
+        if (this.intersect(levelManage.bombers)) {
             if (BombermanGame.gameSound) {
                 Sound.playSound("soundItem");
             }
-            NttGroup.bombers.getItem(type);
-            NttGroup.itemsList.remove(index);
-            NttGroup.map[idX][idY] = ' ';
+            levelManage.bombers.getItem(type);
+            levelManage.itemsList.remove(index);
+            levelManage.map[idX][idY] = ' ';
             Grass tmp = new Grass(idX, idY, Sprite.grass.getFxImage());
-            NttGroup.grassList.add(tmp);
+            levelManage.grassList.add(tmp);
         }
     }
 
