@@ -179,6 +179,9 @@ public class Bomber extends Entity {
         int idX = detonator.get(0).getX()/Sprite.SCALED_SIZE;
         int idY = detonator.get(0).getY()/Sprite.SCALED_SIZE;
         BombermanGame.pathFinder.node[idX][idY].setSolid(false);
+        if (BombermanGame.gameSound) {
+            Sound.playSound("soundBomb");
+        }
         detonator.get(0).explosion(bombRadius, levelManage);
         levelManage.detonatorList.remove(0);
         detonator.remove(0);
