@@ -17,7 +17,6 @@ import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.Player.PlayerController;
 import uet.oop.bomberman.menu.MainMenu;
 import uet.oop.bomberman.menu.Sound;
-import uet.oop.bomberman.pathFinding.PathFinder;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -34,7 +33,6 @@ public class BombermanGame extends Application  {
     public static int playerScore = 0;
     public static int playerLife = 3;
     public static boolean gameSound = true;
-    public static PathFinder pathFinder = new PathFinder();
     public static PriorityQueue<Integer> highscore = new PriorityQueue<>();
     private GraphicsContext gc;
     public static Canvas canvas;
@@ -90,7 +88,6 @@ public class BombermanGame extends Application  {
 
     public void createMap(Scene scene, String last) {
         levelManage = new NttGroup();
-        pathFinder.instantiateNode();
         File url = new File("res/levels/" + last);
         // Đọc dữ liệu từ File với Scanner
         Scanner scanner = null;
@@ -121,14 +118,12 @@ public class BombermanGame extends Application  {
                         levelManage.brickList.add((Brick) object);
                         levelManage.map[j][i] = '*';
                         levelManage.origin[j][i] = ' ';
-                        pathFinder.node[j][i].setSolid(true);
                     }
                     else if(k=='#'){
                         object = new Wall(j,i,Sprite.wall.getFxImage());
                         levelManage.wallList.add((Wall) object);
                         levelManage.map[j][i] = '#';
                         levelManage.origin[j][i] = '#';
-                        pathFinder.node[j][i].setSolid(true);
                     }
                     else if(k==' '){
                         object = new Grass(j, i, Sprite.grass.getFxImage());
@@ -142,7 +137,6 @@ public class BombermanGame extends Application  {
                         levelManage.brickList.add((Brick) object);
                         levelManage.map[j][i] = '*';
                         levelManage.origin[j][i] = k;
-                        pathFinder.node[j][i].setSolid(true);
                     }
                 }
             }

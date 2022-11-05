@@ -262,9 +262,6 @@ public class MainMenu {
             if (prepare.checkEnd()) {
                 menuRoot.getChildren().remove(prepare.prepareView);
                 menuRoot.getChildren().remove(prepare.stage);
-                if(pathFinder != null) {
-                    pathFinder.reset();
-                }
                 running = false;
                 prepare = null;
                 showNext = false;

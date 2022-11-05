@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.NttGroup;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.pathFinding.PathFinder;
 
 public class Enemy3 extends Enemy{
     public boolean isChaseMode() {
@@ -18,6 +19,7 @@ public class Enemy3 extends Enemy{
     private int currentIndex;
     private int goalX;
     private int goalY;
+    public PathFinder pathFinder;
 
     public Enemy3(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
@@ -27,6 +29,9 @@ public class Enemy3 extends Enemy{
     }
     @Override
     public void update(NttGroup levelManage) {
+        if (pathFinder == null) {
+            pathFinder = new PathFinder(levelManage);
+        }
         moveCounter = (moveCounter+1)%2;
         if (!chaseMode) {
             checkChase(levelManage);
@@ -93,9 +98,9 @@ public class Enemy3 extends Enemy{
             chaseMode = true;
             goalX = playerX;
             goalY = playerY;
-            BombermanGame.pathFinder.setNode(idX, idY, playerX, playerY);
-            BombermanGame.pathFinder.search();
-            currentIndex = BombermanGame.pathFinder.pathList.size()-1;
+            pathFinder.setNode(idX, idY, playerX, playerY);
+            pathFinder.search();
+            currentIndex = pathFinder.pathList.size()-1;
         }
     }
 
@@ -112,23 +117,23 @@ public class Enemy3 extends Enemy{
         int playerX = levelManage.bombers.getX() / Sprite.SCALED_SIZE;
         int playerY = levelManage.bombers.getY() / Sprite.SCALED_SIZE;
         if (currentIndex == -1) {
-            BombermanGame.pathFinder.setNode(idX, idY, playerX, playerY);
-            BombermanGame.pathFinder.search();
-            currentIndex = BombermanGame.pathFinder.pathList.size()-1;
+            pathFinder.setNode(idX, idY, playerX, playerY);
+            pathFinder.search();
+            currentIndex = pathFinder.pathList.size()-1;
             goalX = playerX;
             goalY = playerY;
         }
         if (currentIndex >= 0) {
-            if (idX == BombermanGame.pathFinder.pathList.get(currentIndex).col &&
-                    idY == BombermanGame.pathFinder.pathList.get(currentIndex).row &&
+            if (idX == pathFinder.pathList.get(currentIndex).col &&
+                    idY == pathFinder.pathList.get(currentIndex).row &&
                     this.x % Sprite.SCALED_SIZE == 0 && this.y % Sprite.SCALED_SIZE == 0) {
                 currentIndex--;
             }
         }
         if(moveCounter == 0 && currentIndex >= 0) {
-            int tmpX = BombermanGame.pathFinder.pathList.get(currentIndex).col;
-            int tmpY = BombermanGame.pathFinder.pathList.get(currentIndex).row;
-            if (BombermanGame.pathFinder.node[tmpX][tmpY].isSolid()) {
+            int tmpX = pathFinder.pathList.get(currentIndex).col;
+            int tmpY = pathFinder.pathList.get(currentIndex).row;
+            if (pathFinder.node[tmpX][tmpY].isSolid()) {
                 currentIndex = -1;
             }
             else {
@@ -139,9 +144,9 @@ public class Enemy3 extends Enemy{
 
     public void makeMove(int index) {
         int tmp = this.getSpeed();
-        if (this.x == BombermanGame.pathFinder.pathList.get(index).col * 32) {
+        if (this.x == pathFinder.pathList.get(index).col * 32) {
             this.setSpeedX(0);
-            if (this.y < BombermanGame.pathFinder.pathList.get(index).row * 32) {
+            if (this.y < pathFinder.pathList.get(index).row * 32) {
                 this.setSpeedY(tmp);
             }
             else {
@@ -149,9 +154,9 @@ public class Enemy3 extends Enemy{
             }
             this.y += this.getSpeedY();
         }
-        if (this.y == BombermanGame.pathFinder.pathList.get(index).row * 32) {
+        if (this.y == pathFinder.pathList.get(index).row * 32) {
             this.setSpeedY(0);
-            if (this.x < BombermanGame.pathFinder.pathList.get(index).col * 32) {
+            if (this.x < pathFinder.pathList.get(index).col * 32) {
                 this.setSpeedX(tmp);
             }
             else {

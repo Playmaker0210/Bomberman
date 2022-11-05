@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities;
 
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.bomb.Bomb;
+import uet.oop.bomberman.entities.enemy.Enemy3;
 import uet.oop.bomberman.entities.field.Items;
 import uet.oop.bomberman.graphics.Sprite;
 import javafx.scene.image.Image;
@@ -165,7 +166,11 @@ public class Bomber extends Entity {
                 }
                 int idX = bombs.get(i).getX()/Sprite.SCALED_SIZE;
                 int idY = bombs.get(i).getY()/Sprite.SCALED_SIZE;
-                BombermanGame.pathFinder.node[idX][idY].setSolid(false);
+                for (int j = 0; j < levelManage.enemyList.size(); j++) {
+                    if (levelManage.enemyList.get(j) instanceof Enemy3) {
+                        ((Enemy3) levelManage.enemyList.get(j)).pathFinder.node[idX][idY].setSolid(false);
+                    }
+                }
                 bombs.get(i).explosion(bombRadius, levelManage);
                 levelManage.bombList.remove(i);
                 levelManage.map[idX][idY] = ' ';
@@ -178,7 +183,11 @@ public class Bomber extends Entity {
     public void detonate(NttGroup levelManage) {
         int idX = detonator.get(0).getX()/Sprite.SCALED_SIZE;
         int idY = detonator.get(0).getY()/Sprite.SCALED_SIZE;
-        BombermanGame.pathFinder.node[idX][idY].setSolid(false);
+        for (int j = 0; j < levelManage.enemyList.size(); j++) {
+            if (levelManage.enemyList.get(j) instanceof Enemy3) {
+                ((Enemy3) levelManage.enemyList.get(j)).pathFinder.node[idX][idY].setSolid(false);
+            }
+        }
         if (BombermanGame.gameSound) {
             Sound.playSound("soundBomb");
         }
@@ -192,7 +201,11 @@ public class Bomber extends Entity {
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
         levelManage.map[tmpX][tmpY] = 'b';
-        BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
+        for (int j = 0; j < levelManage.enemyList.size(); j++) {
+            if (levelManage.enemyList.get(j) instanceof Enemy3) {
+                ((Enemy3) levelManage.enemyList.get(j)).pathFinder.node[tmpX][tmpY].setSolid(true);
+            }
+        }
         bombs.add(bo);
         bo.setTimePut(LocalDateTime.now()) ;
         levelManage.bombList.add(bo);
@@ -204,7 +217,11 @@ public class Bomber extends Entity {
         int tmpY = this.y / Sprite.SCALED_SIZE;
         Bomb bo = new Bomb(tmpX, tmpY, Sprite.bomb.getFxImage());
         levelManage.map[tmpX][tmpY] = 'b';
-        BombermanGame.pathFinder.node[tmpX][tmpY].setSolid(true);
+        for (int j = 0; j < levelManage.enemyList.size(); j++) {
+            if (levelManage.enemyList.get(j) instanceof Enemy3) {
+                ((Enemy3) levelManage.enemyList.get(j)).pathFinder.node[tmpX][tmpY].setSolid(true);
+            }
+        }
         detonator.add(bo);
         levelManage.detonatorList.add(bo);
     }

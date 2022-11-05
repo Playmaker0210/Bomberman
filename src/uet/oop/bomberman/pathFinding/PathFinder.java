@@ -19,20 +19,23 @@ public class PathFinder {
     boolean isEnd = false;
     int step = 0;
 
-    public PathFinder() {
-        instantiateNode();
+    public PathFinder(NttGroup levelManage) {
+        instantiateNode(levelManage);
     }
 
     /**
      * khoi tao
      */
-    public void instantiateNode() {
+    public void instantiateNode(NttGroup levelManage) {
         node = new Node[BombermanGame.WIDTH][BombermanGame.HEIGHT];
         int col = 1;
         int row = 1;
 
         while (col < BombermanGame.WIDTH-1 && row < BombermanGame.HEIGHT-1) {
             node[col][row] = new Node(col, row);
+            if (levelManage.map[col][row] != ' ') {
+                node[col][row].setSolid(true);
+            }
             col++;
             if (col == BombermanGame.WIDTH-1) {
                 col = 1;

@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.NttGroup;
+import uet.oop.bomberman.entities.enemy.Enemy3;
 import uet.oop.bomberman.entities.field.Brick;
 import uet.oop.bomberman.entities.field.Grass;
 import uet.oop.bomberman.entities.field.Items;
@@ -84,7 +85,11 @@ public class Flame extends Entity {
                 break;
             }
         }
-        BombermanGame.pathFinder.node[idX][idY].setSolid(false);
+        for (int j = 0; j < levelManage.enemyList.size(); j++) {
+            if (levelManage.enemyList.get(j) instanceof Enemy3) {
+                ((Enemy3) levelManage.enemyList.get(j)).pathFinder.node[idX][idY].setSolid(false);
+            }
+        }
         levelManage.map[idX][idY] = levelManage.origin[idX][idY];
         switch (levelManage.origin[idX][idY]) {
             case ' ':
